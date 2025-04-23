@@ -1,0 +1,4 @@
+backend/backend
+frontend/node_models
+
+backend/.env.*
