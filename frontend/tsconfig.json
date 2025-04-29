@@ -1,27 +1,27 @@
 {
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["node", "vite/client"], // Kamu bisa menambahkan 'react-splide' jika ada tipe eksternal atau deklarasi manual
     "target": "ES2022",
     "module": "ES2022",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
-    "rootDirs": [".", "./.react-router/types"], // Pastikan folder ini ada jika diperlukan
-    "baseUrl": ".", // Basis untuk resolusi modul relatif
+    "baseUrl": ".",
     "paths": {
-      "~/*": ["./app/*"] // Alias untuk folder 'app', sesuaikan jika kamu menggunakan alias lain
+      "~/*": ["./app/*"]
     },
+    "types": ["vite/client"],
     "esModuleInterop": true,
-    "verbatimModuleSyntax": true,
-    "noEmit": true, // Tidak mengeluarkan file js saat kompilasi
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true, // Mengabaikan pengecekan tipe untuk library eksternal
-    "strict": true // Aktifkan semua pemeriksaan ketat untuk kualitas kode yang lebih baik
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true
   },
   "include": [
-    "**/*", // Sertakan semua file dalam proyek
-    "**/.server/**/*",
-    "**/.client/**/*",
-    ".react-router/types/**/*" // Sertakan folder tipe untuk React Router jika diperlukan
-  ]
+    "app",
+    ".react-router/types/**/*" // kalau memang kamu pakai tipe custom untuk router
+  ],
+  "exclude": ["node_modules", "dist"]
 }
