@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import Cookies from "js-cookie";
 
-// Definisikan tipe User
 interface User {
   _id: string;
   username: string;
@@ -11,17 +10,14 @@ interface User {
   savedRecipes: string[];
 }
 
-// Tipe context
 interface AuthContextType {
   user: User | null;
   login: (userData: User) => void;
   logout: () => void;
 }
 
-// Context dengan nilai default `undefined`
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Hook useAuth
 const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -30,12 +26,10 @@ const useAuth = (): AuthContextType => {
   return context;
 };
 
-// Props untuk AuthProvider
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Komponen AuthProvider
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(() => {
     const storedUser = Cookies.get("user");
