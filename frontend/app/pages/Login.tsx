@@ -60,7 +60,7 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="max-w-[400px] m-auto p-4 bg-gray-100 rounded-lg shadow-md">
+    <div className="max-w-[400px] m-auto p-4 bg-gray-100 rounded-lg shadow-md text-gray-700">
       <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -74,6 +74,7 @@ const Login: React.FC = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            
           />
         </div>
         <div className="mb-4">
