@@ -6,8 +6,9 @@ import { FaUtensils, FaHome } from 'react-icons/fa';
 import { IoChatboxEllipsesOutline } from 'react-icons/io5';
 import { AiOutlineBook, AiOutlineReload } from 'react-icons/ai';
 import { useAuth } from '../context/AuthContext';
+import { toast, ToastContainer } from 'react-toastify'; // Import Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
 
-// Typing untuk NavItem props
 interface NavItemProps {
   to: string;
   icon: React.ReactNode;
@@ -28,9 +29,20 @@ const TopNavBar: React.FC = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await logout(); // Logout function from AuthContext
+      toast.success('Logout successfully!', {
+        position: 'top-center',
+        autoClose: 2000, 
+      });
+      navigate('/');
+    } catch (error) {
+      toast.error('Logout failed. Please try again.', {
+        position: 'top-center',
+        autoClose: 2000,
+      });
+    }
   };
 
   return (
@@ -113,6 +125,9 @@ const TopNavBar: React.FC = () => {
           </nav>
         </div>
       </div>
+
+      {/* Toastify Container */}
+      <ToastContainer />
     </>
   );
 };

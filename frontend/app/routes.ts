@@ -1,4 +1,4 @@
-import {type RouteConfig, index, route} from '@react-router/dev/routes'
+import { type RouteConfig, index, route } from "@react-router/dev/routes";
 
 // <Routes>
 //     <Route path="/" element={<Home />} />
@@ -13,15 +13,12 @@ import {type RouteConfig, index, route} from '@react-router/dev/routes'
 // </Routes>
 
 export default [
-    index('./pages/Home.tsx'),
-    route('login', './pages/Login.tsx'),
-    route('logout', './pages/Logout.tsx'),
-    route('register', './pages/Register.tsx'),
-    route('createRecipe', './pages/CreateRecipe.tsx'),
-    route('savedRecipes', './pages/savedRecipes.tsx'),
-    route('updateRecipe', './pages/UpdateRecipe.tsx'),
-    route('help', './pages/Help.tsx'),
-    route('all', './pages/AllRecipes.tsx'),
-] satisfies RouteConfig
-
-
+  index("./pages/Home.tsx"),
+  route("login", "./pages/Login.tsx"),
+  route("register", "./pages/Register.tsx"),
+  route("createRecipe", "./pages/CreateRecipe.tsx"),
+  route("savedRecipes", "./pages/savedRecipes.tsx"),
+  route("updateRecipe", "./pages/UpdateRecipe.tsx"),
+  route("help", "./pages/Help.tsx"),
+  route("all", "./pages/AllRecipes.tsx"),
+] satisfies RouteConfig;
