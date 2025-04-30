@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // Import the context
+import { useAuth } from "../context/AuthContext";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -10,7 +10,7 @@ const Login: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const { login } = useAuth(); // Destructure login from the context
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,13 +35,12 @@ const Login: React.FC = () => {
         setIsLoggedIn(true);
         const data = response.data;
 
-        // Call login function from context to save user and token
         login({
           _id: data.user._id,
           username: data.user.username,
           email: data.user.email,
           token: data.token,
-          savedRecipes: data.user.savedRecipes || [], // Assuming savedRecipes is in the response
+          savedRecipes: data.user.savedRecipes || [],
         });
 
         setSuccess("Login successful");
@@ -60,49 +59,67 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="max-w-[400px] m-auto p-4 bg-gray-100 rounded-lg shadow-md text-gray-700">
-      <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block mb-2" htmlFor="email">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            className="w-full p-2 border rounded"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2" htmlFor="password">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            className="w-full p-2 border rounded"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-green-400 text-white py-2 px-4 rounded block w-full"
-        >
-          Login
-        </button>
-      </form>
-      <p className="text-center mt-4">
-        Don't have an account?{" "}
-        <Link to="/register" className="text-blue-500">
-          Register here
-        </Link>
-      </p>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="max-w-lg w-full bg-white rounded-xl shadow-2xl p-8 transform transition-all duration-500">
+        <h2 className="text-4xl font-extrabold text-orange-500 text-center mb-8">
+          Welcome Back
+        </h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-6">
+            <label
+              className="block text-sm font-semibold text-gray-600 mb-2"
+              htmlFor="email"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <label
+              className="block text-sm font-semibold text-gray-600 mb-2"
+              htmlFor="password"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-lg transition-shadow shadow-md hover:shadow-2xl"
+          >
+            Login
+          </button>
+        </form>
+        <p className="text-center text-sm text-gray-600 mt-6">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="text-blue-500 hover:underline font-medium"
+          >
+            Register here
+          </Link>
+        </p>
+        {error && (
+          <p className="text-center text-red-500 mt-4 text-sm">{error}</p>
+        )}
+        {success && (
+          <p className="text-center text-green-500 mt-4 text-sm">{success}</p>
+        )}
+      </div>
     </div>
   );
 };
