@@ -1,3 +1,4 @@
+import React from 'react'
 import Cookies from "js-cookie"
 
 
@@ -9,7 +10,7 @@ interface CardItemParams {
 }
 
 const CardItems:React.FC<CardItemParams> = ({nama_pembuat, nama_resep, id_item, img}) => {
-    let token:any = Cookies.get('auth_token') || ''
+    const token:any = Cookies.get('auth_token') || ''
     return (
         <section className="relative bg-white w-[300px] rounded-xl overflow-hidden shadow-lg shadow-gray-200">
             <div className="text-color-txt relative">
