@@ -36,6 +36,7 @@ const CreateRecipe: React.FC = () => {
 
   // Define handleSubmit type
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    
     e.preventDefault();
 
     if (!formData.name || !formData.cookingTime || !formData.imageUrl) {
@@ -50,6 +51,7 @@ const CreateRecipe: React.FC = () => {
     const instructions = formData.instructions ? formData.instructions.trim() : '';
 
     try {
+      
       const response = await axios.post(
         'http://localhost:7000/api/v1/create',
         {

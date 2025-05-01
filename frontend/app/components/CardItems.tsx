@@ -1,3 +1,4 @@
+import Cookies from "js-cookie"
 
 
 interface CardItemParams {
@@ -8,6 +9,7 @@ interface CardItemParams {
 }
 
 const CardItems:React.FC<CardItemParams> = ({nama_pembuat, nama_resep, id_item, img}) => {
+    let token:any = Cookies.get('auth_token') || ''
     return (
         <section className="relative bg-white w-[300px] rounded-xl overflow-hidden shadow-lg shadow-gray-200">
             <div className="text-color-txt relative">
@@ -19,14 +21,19 @@ const CardItems:React.FC<CardItemParams> = ({nama_pembuat, nama_resep, id_item, 
                     <p className="text-sm font-semibold mt-2">Dibuat Oleh : <span className="font-normal">Grantly Sorongan</span></p>
                     <button className="text-sm text-primary mt-7 cursor-pointer">{'Selengkapnya >> '}</button>
                 </div>
-                <div className="flex items-center gap-x-5 absolute bottom-3 right-3">
-                    <button className="cursor-pointer">
-                        <img src="./icons/updateIcon.svg" alt="" width={15}/>
-                    </button>
-                    <button className="cursor-pointer">
-                        <img src="./icons/deleteIcon.svg" alt="" width={13}/>
-                    </button>
-                </div>
+                {token.length > 0 ? (
+                    <div className="flex items-center gap-x-5 absolute bottom-3 right-3">
+                        <button className="cursor-pointer">
+                            <img src="./icons/updateIcon.svg" alt="" width={15}/>
+                        </button>
+                        <button className="cursor-pointer">
+                            <img src="./icons/deleteIcon.svg" alt="" width={13}/>
+                        </button>
+                    </div>
+
+                ): (
+                    <></>
+                )}
             </div>
         </section>
     )

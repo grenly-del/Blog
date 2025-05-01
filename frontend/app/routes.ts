@@ -21,4 +21,7 @@ export default [
   route("updateRecipe", "./pages/UpdateRecipe.tsx"),
   route("help", "./pages/Help.tsx"),
   route("all", "./pages/AllRecipes.tsx"),
+  route('protect-page', './pages/privatePage.tsx', [
+    index('./pages/ProtectedPage/index.tsx')
+  ])
 ] satisfies RouteConfig;

@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const cors = require('cors')
 
 var indexRouter = require('./routes/index.router');
 const connectDB = require('./database')
@@ -11,6 +12,13 @@ connectDB()
 
 var app = express();
 
+
+
+
+app.use(cors({
+    origin: "*",
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+}))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
