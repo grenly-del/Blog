@@ -28,7 +28,7 @@ const Register: React.FC = () => {
       if (response.status === 201) {
         setTimeout(() => {
           setIsRegistered(true);
-        }, 2500); // tunggu setelah toast selesai
+        }, 500); // tunggu setelah toast selesai
       } else {
         console.log("Registration failed");
         setError("Registration failed");
