@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-
+import localImage from '../images/image1.png'; // pastikan path ini benar
+import localImage1 from '../images/image2.png';
+import localImage2 from '../images/image3.png';
+import localImage3 from '../images/image4.png';
 interface Slider {
   url: string;
 }
@@ -8,22 +11,22 @@ interface Slider {
 const FeaturedSection: React.FC = () => {
   const sliders: Slider[] = [
     {
-      url: 'https://bestanimations.com/media/food/690171314taco-animated-gif.gif',
+      url: localImage,
     },
     {
-      url: 'https://usagif.com/wp-content/uploads/2022/fzk5d/taco-acegif-14-hot-taco.gif',
+      url: localImage1,
     },
     {
-      url: 'https://cdn.dribbble.com/userupload/5509815/file/original-f3ac92426bc61e1c87bcb5ac8c7a5516.gif',
+      url: localImage2,
     },
     {
-      url: 'https://usagif.com/wp-content/uploads/gifs/spaghetti-73.gif',
+      url: localImage3,
     },
     {
-      url: 'https://cdn.dribbble.com/users/1539273/screenshots/15742029/media/c744f8a6fa8a7f723c8684ce26809f1a.gif',
+      url: localImage,
     },
     {
-      url: 'https://bestanimations.com/media/food/638823173food-animated-gif-6.gif',
+      url: localImage,
     },
   ];
 
@@ -44,7 +47,7 @@ const FeaturedSection: React.FC = () => {
   return (
     <div className="max-w-[1520px] h-[500px] w-full py-4 px-4 relative group">
       <div
-        className="w-full h-full rounded-2xl bg-center bg-cover duration-500"
+        className="w-full h-full rounded-2xl bg-center bg-cover duration-500 "
         style={{ backgroundImage: `url(${sliders[current].url})` }}
       ></div>
 
@@ -55,7 +58,7 @@ const FeaturedSection: React.FC = () => {
         <FaArrowRight onClick={nextSlider} />
       </div>
       <div className="flex top-4 justify-center py-2">
-        {sliders.map((slide, index) => (
+        {sliders.map((_, index) => (
           <div
             key={index}
             className={`w-3 h-3 mx-2 rounded-full cursor-pointer ${

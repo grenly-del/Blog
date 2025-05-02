@@ -21,4 +21,5 @@ export default [
   route("updateRecipe", "./pages/UpdateRecipe.tsx"),
   route("help", "./pages/Help.tsx"),
   route("all", "./pages/AllRecipes.tsx"),
+  route("Dashboard", "./pages/Dashboard.tsx"),
 ] satisfies RouteConfig;
