@@ -16,12 +16,13 @@ export default [
   index("./pages/Home.tsx"),
   route("login", "./pages/Login.tsx"),
   route("register", "./pages/Register.tsx"),
-  route("createRecipe", "./pages/CreateRecipe.tsx"),
   route("savedRecipes", "./pages/savedRecipes.tsx"),
+  route("createRecipe", "./pages/ProtectedPage/CreateRecipe/index.tsx"),
   route("updateRecipe", "./pages/UpdateRecipe.tsx"),
   route("help", "./pages/Help.tsx"),
   route("all", "./pages/AllRecipes.tsx"),
-  route('protect-page', './pages/privatePage.tsx', [
-    index('./pages/ProtectedPage/index.tsx')
+  route('protect-page', './pages/privatePage.tsx', [ // << --- Semua routes yang private dimasukan di dalam sini !
+    index('./pages/ProtectedPage/index.tsx'), // <<-- contoh halaman yang private
+    route("createRecipe", "./pages/ProtectedPage/CreateRecipe/index.tsx"), // <<-- contoh halaman yang private
   ])
 ] satisfies RouteConfig;
