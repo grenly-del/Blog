@@ -1,6 +1,9 @@
+
 const Dashboard = () => {
     return (
-        <h1>Protected Page</h1>
+           <div>
+                <h1>Test Protect</h1>
+           </div>
     )
 }
 
