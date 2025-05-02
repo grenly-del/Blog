@@ -9,9 +9,12 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import { AuthProvider } from "./context/AuthContext";
+// import { AuthProvider } from "./context/AuthContext";
+import { Provider } from "react-redux";
 import TopNavBar from "./components/TopNavBar";
 import Footer from "./components/Footer";
+import store from "./redux/store";
+import { ToastContainer } from "react-toastify";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -45,11 +48,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return  <AuthProvider>
+  return  <Provider store={store}>
               <TopNavBar />
               <Outlet />
+              <ToastContainer />
               <Footer />
-          </AuthProvider>;
+          </Provider>;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

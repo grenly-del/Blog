@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -9,38 +11,35 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    const url = `http://${import.meta.env.VITE_HOSTNAME_BE}:${import.meta.env.VITE_PORT_BE}`;
+    console.log(url);
     e.preventDefault();
     setError(null);
-    setSuccess(null);
 
     try {
       const response = await axios.post(
-        "http://localhost:7000/api/v1/signup",
-        {
-          name,
-          email,
-          password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        `${url}/api/v1/user/regis`,
+        { name, email, password },
+        { headers: { "Content-Type": "application/json" } }
       );
 
-      if (response.status === 200) {
-        setIsRegistered(true);
-        setSuccess("Registration successful!");
-        console.log("Registered successfully");
+      if (response.status === 201) {
+        setTimeout(() => {
+          setIsRegistered(true);
+        }, 500); // tunggu setelah toast selesai
       } else {
         console.log("Registration failed");
+        setError("Registration failed");
       }
-    } catch (error) {
-      console.error("Error occurred:", error);
-      setError("Error while onboarding user");
+    } catch (error:any) {
+      const errorMessage = error?.response?.data?.payload?.message || "An unexpected error occurred.";
+      console.error("Error occurred:", errorMessage);
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 
@@ -56,12 +55,7 @@ const Register: React.FC = () => {
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-5">
-            <label
-              className="block text-sm font-semibold text-gray-600 mb-2"
-              htmlFor="name"
-            >
-              Name
-            </label>
+            <label className="block text-sm font-semibold text-gray-600 mb-2" htmlFor="name">Name</label>
             <input
               type="text"
               id="name"
@@ -72,12 +66,7 @@ const Register: React.FC = () => {
             />
           </div>
           <div className="mb-5">
-            <label
-              className="block text-sm font-semibold text-gray-600 mb-2"
-              htmlFor="email"
-            >
-              Email
-            </label>
+            <label className="block text-sm font-semibold text-gray-600 mb-2" htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
@@ -88,12 +77,7 @@ const Register: React.FC = () => {
             />
           </div>
           <div className="mb-5">
-            <label
-              className="block text-sm font-semibold text-gray-600 mb-2"
-              htmlFor="password"
-            >
-              Password
-            </label>
+            <label className="block text-sm font-semibold text-gray-600 mb-2" htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
@@ -112,18 +96,12 @@ const Register: React.FC = () => {
         </form>
         <p className="text-center text-sm text-gray-600 mt-4">
           Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-blue-500 hover:underline font-medium"
-          >
+          <Link to="/login" className="text-blue-500 hover:underline font-medium">
             Login here
           </Link>
         </p>
         {error && (
           <p className="text-center text-red-500 mt-4 text-sm">{error}</p>
-        )}
-        {success && (
-          <p className="text-center text-orange-500 mt-4 text-sm">{success}</p>
         )}
       </div>
     </div>

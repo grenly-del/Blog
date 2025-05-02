@@ -27,11 +27,11 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon, text }) => (
 const TopNavBar: React.FC = () => {
   const [show, setShow] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  // const { user, logout } = useAuth();
 
   const handleLogout = async () => {
     try {
-      await logout();
+      // await logout();
       toast.success("Logout successfully!", {
         position: "top-center",
         autoClose: 2000,
@@ -82,24 +82,14 @@ const TopNavBar: React.FC = () => {
               <BsSearch size={20} className="text-green-500 cursor-pointer" />
             </Link>
           </div>
-
-          {/* Login/Logout Button */}
-          {user ? (
-            <button
-              className="border border-orange-500 text-orange-500 hidden md:flex items-center py-2 px-4 rounded-full cursor-pointer hover:bg-orange-100 transition"
-              onClick={handleLogout}
-            >
-              <BsFillPersonFill size={25} />
-              <span className="ml-2">Logout</span>
-            </button>
-          ) : (
+          
             <Link to="/login">
               <button className="border border-orange-500 text-orange-500 hidden md:flex items-center py-2 px-4 rounded-full cursor-pointer hover:bg-orange-100 transition">
                 <BsFillPersonFill size={25} />
                 <span className="ml-2">Login</span>
               </button>
             </Link>
-          )}
+         
         </div>
       </div>
 

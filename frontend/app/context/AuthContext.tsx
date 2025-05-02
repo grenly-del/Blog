@@ -3,11 +3,7 @@ import type { ReactNode } from "react";
 import Cookies from "js-cookie";
 
 interface User {
-  _id: string;
-  username: string;
-  email: string;
   token: string;
-  savedRecipes: string[];
 }
 
 interface AuthContextType {

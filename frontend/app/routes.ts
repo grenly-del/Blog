@@ -21,5 +21,11 @@ export default [
   route("updateRecipe", "./pages/UpdateRecipe.tsx"),
   route("help", "./pages/Help.tsx"),
   route("all", "./pages/AllRecipes.tsx"),
+<<<<<<< HEAD
   route("Dashboard", "./pages/Dashboard.tsx"),
+=======
+  route('protect-page', './pages/privatePage.tsx', [
+    index('./pages/ProtectedPage/index.tsx')
+  ])
+>>>>>>> 14a7f516e98906c268bba4e825cc5ff425e89687
 ] satisfies RouteConfig;
