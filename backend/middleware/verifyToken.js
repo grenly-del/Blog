@@ -15,6 +15,7 @@ const verifyToken = async (req, res, next) => {
             const currentUser = await Users.findById(decoded.userId);
             if (!currentUser) return appRes(res, 403, 'User tidak ditemukan!');
             req.user = decoded;
+            console.log('User ID:', decoded.userId);
             next();
         });
     } catch (error) {

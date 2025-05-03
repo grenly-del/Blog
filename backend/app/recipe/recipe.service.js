@@ -11,10 +11,11 @@ const createRecipe = async (recipeData, userId, imagePath) => {
   if (!userId) {
     throw new Error("User not authenticated");
   }
-
+  console.log(imagePath); // Debugging line
   let imageUrl = "";
   if (imagePath) {
     imageUrl = await uploadImageToCloudinary(imagePath);
+    console.log("Image URL:", imageUrl);
   }
 
   const newRecipe = {
@@ -69,9 +70,6 @@ const getSavedRecipes = async (userId) => {
 
 const uploadImageToCloudinary = async (imagePath) => {
   try {
-    if (!fs.existsSync(imagePath)) {
-      throw new Error("Image file does not exist");
-    }
 
     const result = await cloudinary.uploader.upload(imagePath, {
       resource_type: "image",

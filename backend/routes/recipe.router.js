@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const recipeController = require("../app/recipe/recipe.controller");
 const upload = require("../middleware/cloudinaryStorage");
+const verifyToken = require("../middleware/verifyToken");
 
 // TEST Route (untuk pengujian)
 // Menunjukkan kalau route ini berfungsi
@@ -10,7 +11,7 @@ router.get("/recipestest", (req, res) => {
 });
 
 // CREATE - Tambah resep baru (dengan upload gambar)
-router.post("/recipes", upload.single("image"), recipeController.createRecipe);
+router.post("/recipes",verifyToken, upload.single("image"), recipeController.createRecipe);
 
 // READ - Ambil semua resep
 router.get("/recipes", recipeController.getAllRecipes);

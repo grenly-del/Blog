@@ -42,7 +42,9 @@ exports.createRecipe = async (req, res) => {
     }
 
     const imageUrl = req.file?.path; // Cloudinary path
-    const userId = req.user?._id || userOwner;
+    const userId = req.user?.userId || userOwner;
+    console.log("User ID:", userId); // Debugging line
+    console.log("Image URL:", imageUrl); // Debugging line
 
     if (!userId) {
       return res.status(400).json({ success: false, message: "User is not authenticated" });
@@ -56,7 +58,8 @@ exports.createRecipe = async (req, res) => {
         cookingTime,
         imageUrl,
       },
-      userId
+      userId,
+      imageUrl
     );
 
     return res.status(201).json({ success: true, data: newRecipe });
