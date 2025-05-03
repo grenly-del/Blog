@@ -86,17 +86,6 @@ exports.deleteRecipe = async (req, res) => {
   }
 };
 
-exports.saveRecipe = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user._id;
-
-    const saved = await recipeService.saveRecipe(id, userId);
-    return res.json({ success: true, data: saved });
-  } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
-  }
-};
 
 exports.getSavedRecipes = async (req, res) => {
   try {
