@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FaImage } from 'react-icons/fa'; // Import ikon gambar
 
 interface Recipe {
   _id: string;
@@ -35,8 +36,21 @@ const SavedRecipes: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {savedRecipes.map((recipe) => (
-              <div key={recipe._id} className="bg-white rounded-lg shadow-lg">
-                <img src={recipe.imageUrl} alt={recipe.name} className="w-full h-[200px] object-cover rounded-t-lg" />
+              <div key={recipe._id} className="bg-white rounded-lg shadow-lg overflow-hidden">
+                {/* Image Section */}
+                <div className="relative w-full h-[200px] bg-gray-300 flex justify-center items-center">
+                  {recipe.imageUrl ? (
+                    <img
+                      src={recipe.imageUrl}
+                      alt={recipe.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <FaImage className="text-white text-5xl" /> // Fallback icon when no image
+                  )}
+                </div>
+
+                {/* Recipe Details */}
                 <div className="p-4">
                   <h2 className="text-xl font-semibold mb-2">{recipe.name}</h2>
                   <p className="text-gray-600 mb-2">Cooking Time: {recipe.cookingTime} minutes</p>

@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const Register: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -13,7 +13,9 @@ const Register: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    const url = `http://${import.meta.env.VITE_HOSTNAME_BE}:${import.meta.env.VITE_PORT_BE}`;
+    const url = `http://${import.meta.env.VITE_HOSTNAME_BE}:${
+      import.meta.env.VITE_PORT_BE
+    }`;
     console.log(url);
     e.preventDefault();
     setError(null);
@@ -33,8 +35,10 @@ const Register: React.FC = () => {
         console.log("Registration failed");
         setError("Registration failed");
       }
-    } catch (error:any) {
-      const errorMessage = error?.response?.data?.payload?.message || "An unexpected error occurred.";
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.payload?.message ||
+        "An unexpected error occurred.";
       console.error("Error occurred:", errorMessage);
       toast.error(errorMessage, {
         position: "top-right",
@@ -44,6 +48,10 @@ const Register: React.FC = () => {
   };
 
   if (isRegistered) {
+    toast.info("Account already registered, please login.", {
+      position: "top-right",
+      autoClose: 3000,
+    });
     return <Navigate to="/login" />;
   }
 
@@ -55,7 +63,12 @@ const Register: React.FC = () => {
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-5">
-            <label className="block text-sm font-semibold text-gray-600 mb-2" htmlFor="name">Name</label>
+            <label
+              className="block text-sm font-semibold text-gray-600 mb-2"
+              htmlFor="name"
+            >
+              Name
+            </label>
             <input
               type="text"
               id="name"
@@ -66,7 +79,12 @@ const Register: React.FC = () => {
             />
           </div>
           <div className="mb-5">
-            <label className="block text-sm font-semibold text-gray-600 mb-2" htmlFor="email">Email</label>
+            <label
+              className="block text-sm font-semibold text-gray-600 mb-2"
+              htmlFor="email"
+            >
+              Email
+            </label>
             <input
               type="email"
               id="email"
@@ -77,7 +95,12 @@ const Register: React.FC = () => {
             />
           </div>
           <div className="mb-5">
-            <label className="block text-sm font-semibold text-gray-600 mb-2" htmlFor="password">Password</label>
+            <label
+              className="block text-sm font-semibold text-gray-600 mb-2"
+              htmlFor="password"
+            >
+              Password
+            </label>
             <input
               type="password"
               id="password"
@@ -96,7 +119,10 @@ const Register: React.FC = () => {
         </form>
         <p className="text-center text-sm text-gray-600 mt-4">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline font-medium">
+          <Link
+            to="/login"
+            className="text-blue-500 hover:underline font-medium"
+          >
             Login here
           </Link>
         </p>

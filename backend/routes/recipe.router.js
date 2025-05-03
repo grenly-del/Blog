@@ -1,0 +1,33 @@
+const express = require("express");
+const router = express.Router();
+const recipeController = require("../app/recipe/recipe.controller");
+const upload = require("../middleware/cloudinaryStorage");
+
+// TEST Route (untuk pengujian)
+// Menunjukkan kalau route ini berfungsi
+router.get("/recipestest", (req, res) => {
+  res.send("Hello from recipe router test");
+});
+
+// CREATE - Tambah resep baru (dengan upload gambar)
+router.post("/recipes", upload.single("image"), recipeController.createRecipe);
+
+// READ - Ambil semua resep
+router.get("/recipes", recipeController.getAllRecipes);
+
+// READ - Ambil resep berdasarkan ID
+router.get("/recipes/:id", recipeController.getRecipeById);
+
+// UPDATE - Update resep (termasuk upload gambar baru)
+router.put("/recipes/:id", upload.single("image"), recipeController.updateRecipe);
+
+// DELETE - Hapus resep berdasarkan ID
+router.delete("/recipes/:id", recipeController.deleteRecipe);
+
+// SAVE - User menyimpan resep ke akun mereka
+router.post("/recipes/:id/save", recipeController.saveRecipe);
+
+// READ - Ambil resep yang disimpan oleh user
+router.get("/users/:userId/saved", recipeController.getSavedRecipes);
+
+module.exports = router;
