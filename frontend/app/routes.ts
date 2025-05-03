@@ -21,8 +21,8 @@ export default [
   route("updateRecipe", "./pages/UpdateRecipe.tsx"),
   route("help", "./pages/Help.tsx"),
   route("all", "./pages/AllRecipes.tsx"),
+  route("/dashboard", "./pages/Dashboard.tsx"), // <<-- contoh halaman yang private
   route('protect-page', './pages/privatePage.tsx', [ // << --- Semua routes yang private dimasukan di dalam sini !
     index('./pages/ProtectedPage/index.tsx'), // <<-- contoh halaman yang private
-    route("dashboard", "./pages/Dashboard.tsx"), // <<-- contoh halaman yang private
   ])
 ] satisfies RouteConfig;
