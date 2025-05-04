@@ -17,7 +17,7 @@ const SavedRecipes: React.FC = () => {
 
   useEffect(() => {
     // Fetch the user's saved recipes from the server
-    axios.get(`http://localhost:7000/api/v1/${userId}`)
+    axios.get(`http://localhost:3005/api/v1/recipe/recipes/${userId}`)
       .then((response) => {
         setSavedRecipes(response.data.savedRecipes);
       })

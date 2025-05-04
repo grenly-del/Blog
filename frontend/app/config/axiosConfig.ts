@@ -7,7 +7,7 @@ const token = Cookies.get('auth_token')
 const instance = axios.create({
     baseURL: url,
     headers: {
-        'Authorization': `barrer ${token}`,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
     
     }

@@ -2,30 +2,29 @@ import React, { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import RequestAxios from "../../../config/axiosConfig";
-import { FaCamera } from "react-icons/fa"; // Import Icon from react-icons
+import { FaCamera } from "react-icons/fa";
 
-// Define the form data type
 interface FormData {
   name: string;
   ingredients: string;
   instructions: string;
   cookingTime: string;
-  imageUrl: File | null;
+  iamge: File | null;
 }
 
 const CreateRecipe: React.FC = () => {
   const navigate = useNavigate();
 
-  // Define formData state with the proper type
   const [formData, setFormData] = useState<FormData>({
     name: "",
     ingredients: "",
     instructions: "",
     cookingTime: "",
-    imageUrl: null, // Change to accept File object
+    iamge: null,
   });
 
-  // Define handleChange type
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -33,17 +32,18 @@ const CreateRecipe: React.FC = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle file change
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
-    setFormData({ ...formData, imageUrl: file });
+    if (file) {
+      setFormData({ ...formData, iamge: file });
+      setPreviewImage(URL.createObjectURL(file));
+    }
   };
 
-  // Define handleSubmit type
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.cookingTime || !formData.imageUrl) {
+    if (!formData.name || !formData.cookingTime || !formData.iamge) {
       alert("Please fill out all required fields");
       return;
     }
@@ -56,23 +56,21 @@ const CreateRecipe: React.FC = () => {
       ? formData.instructions.trim()
       : "";
 
-    // Create a FormData object to send the data including the image
     const form = new FormData();
     form.append("name", formData.name);
-    form.append("ingredients", JSON.stringify(ingredients)); // Convert array to string
+    form.append("ingredients", JSON.stringify(ingredients));
     form.append("instructions", instructions);
     form.append("cookingTime", formData.cookingTime);
 
-    // Add image file to FormData
-    if (formData.imageUrl) {
-      form.append("image", formData.imageUrl);
+    if (formData.iamge) {
+      form.append("image", formData.iamge);
     } else {
       alert("Please upload an image.");
       return;
     }
 
     try {
-      const response = await RequestAxios.post("/create", form, {
+      const response = await RequestAxios.post("/recipe/addrecipe", form, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -170,24 +168,37 @@ const CreateRecipe: React.FC = () => {
             <label className="block text-gray-600 font-semibold mb-2">
               Image
             </label>
-            {/* Custom Input Style for Image */}
-            <label className="w-full h-40 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer">
-              <FaCamera className="text-gray-500 text-4xl" />
-              <input
-                type="file"
-                name="imageUrl"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-                required
-              />
-            </label>
+            <div className="flex items-center space-x-4">
+              {/* Custom Input Style for Image */}
+              <label className="w-20 h-20 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer">
+                <FaCamera className="text-gray-500 text-2xl" />
+                <input
+                  type="file"
+                  name="iamge"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  required
+                />
+              </label>
+
+              {/* Display the preview image */}
+              {previewImage && (
+                <div className="w-20 h-20 overflow-hidden rounded-lg border border-gray-300">
+                  <img
+                    src={previewImage}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="text-center">
             <button
               type="submit"
-              className="bg-orange-700 text-white px-6 py-2 rounded-full hover:bg-orange-600 transition duration-300"
+              className="bg-orange-700 text-white px-6 py-2 rounded-full cursor-pointer hover:bg-orange-600 transition duration-300"
             >
               Create Recipe
             </button>

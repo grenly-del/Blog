@@ -15,7 +15,7 @@ const createRecipe = async (recipeData, userId, imagePath) => {
   let imageUrl = "";
   if (imagePath) {
     imageUrl = await uploadImageToCloudinary(imagePath);
-    console.log("Image URL:", imageUrl);
+    
   }
 
   const newRecipe = {

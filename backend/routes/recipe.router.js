@@ -11,7 +11,7 @@ router.get("/recipestest", (req, res) => {
 });
 
 // CREATE - Tambah resep baru (dengan upload gambar)
-router.post("/recipes",verifyToken, upload.single("image"), recipeController.createRecipe);
+router.post("/addrecipe",verifyToken, upload.single("image"), recipeController.createRecipe);
 
 // READ - Ambil semua resep
 router.get("/recipes", recipeController.getAllRecipes);
@@ -24,9 +24,6 @@ router.put("/recipes/:id", upload.single("image"), recipeController.updateRecipe
 
 // DELETE - Hapus resep berdasarkan ID
 router.delete("/recipes/:id", recipeController.deleteRecipe);
-
-// SAVE - User menyimpan resep ke akun mereka
-router.post("/recipes/:id/save", recipeController.saveRecipe);
 
 // READ - Ambil resep yang disimpan oleh user
 router.get("/users/:userId/saved", recipeController.getSavedRecipes);

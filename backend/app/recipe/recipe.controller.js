@@ -41,17 +41,15 @@ exports.createRecipe = async (req, res) => {
       return res.status(400).json({ success: false, message: "Instructions cannot exceed 200 characters" });
     }
 
-    const imageUrl = req.file?.path; // Cloudinary path
+    const imageUrl = req.file?.path || req.file?.secure_url;
     const userId = req.user?.userId || userOwner;
-    console.log("User ID:", userId); // Debugging line
-    console.log("Image URL:", imageUrl); // Debugging line
 
     if (!userId) {
       return res.status(400).json({ success: false, message: "User is not authenticated" });
     }
 
     const newRecipe = await recipeService.createRecipe(
-      {
+      { 
         name,
         ingredients: parsedIngredients,
         instructions,
