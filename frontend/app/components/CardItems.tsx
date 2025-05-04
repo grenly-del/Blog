@@ -31,16 +31,16 @@ const CardItems: React.FC<CardItemParams> = ({
           <button className="text-sm text-primary mt-7 cursor-pointer">{'Lihat >> '}</button>
         </div>
         {isUser === "true" && (
-          <div className="flex items-center gap-x-5 absolute bottom-3 right-3">
+          <div className="flex items-center gap-x-5 absolute bottom-5 right-3">
             <button 
               className="cursor-pointer"
             >
-              <img src="./icons/updateIcon.svg" alt="Update" width={15} />
+              <img src="./icons/updateIcon.svg" alt="Update" width={16} />
             </button>
             <button 
               className="cursor-pointer"
             >
-              <img src="./icons/deleteIcon.svg" alt="Delete" width={13} />
+              <img src="./icons/deleteIcon.svg" alt="Delete" width={16} />
             </button>
           </div>
         )}

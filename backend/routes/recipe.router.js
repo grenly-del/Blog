@@ -17,7 +17,7 @@ router.post("/",verifyToken, upload.single("image"), recipeController.createReci
 router.get("/", recipeController.getAllRecipes);
 
 // READ - Ambil resep berdasarkan ID
-router.get("/:id", recipeController.getRecipeById);
+router.get("/with-id", verifyToken, recipeController.getRecipeById);
 
 // UPDATE - Update resep (termasuk upload gambar baru)
 router.put("/:id", upload.single("image"), recipeController.updateRecipe);

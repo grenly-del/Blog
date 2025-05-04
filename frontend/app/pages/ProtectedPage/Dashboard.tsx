@@ -173,6 +173,7 @@ export default function Dashboard() {
                   nama_resep={card.nama_resep}
                   img={card.img}
                   id_item={card.id_item}
+                  isUser="true"
                 />
               </SwiperSlide>
             ))}

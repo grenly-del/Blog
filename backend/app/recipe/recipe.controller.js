@@ -5,16 +5,17 @@ const recipeService = require("./recipe.service");
 exports.getAllRecipes = async (req, res) => {
   try {
     const recipes = await recipeService.getAllRecipes();
-    return res.json({ success: true, data: recipes });
+    appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil mengambil resep!', recipes)
   } catch (err) {
     console.log(err)
     next(err)
   }
 };
 
-exports.getRecipeById = async (req, res) => {
+exports.getRecipeById = async (req, res, next) => {
   try {
-    const recipe = await recipeService.getRecipeById(req.params.id);
+    const userId = req.user.userId
+    const recipe = await recipeService.getRecipeById(userId);
     appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil ambil data', recipe)
   } catch (err) {
     console.log(err)
@@ -32,6 +33,7 @@ exports.createRecipe = async (req, res, next) => {
     }
 
     const parsedIngredients = typeof ingredients === "string" ? JSON.parse(ingredients) : ingredients;
+    console.log(parsedIngredients)
 
     if (!Array.isArray(parsedIngredients)) {
       throw new Error("Ingredients must be an array")
