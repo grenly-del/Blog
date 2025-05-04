@@ -1,16 +1,6 @@
 import { type RouteConfig, index, route } from "@react-router/dev/routes";
 
-// <Routes>
-//     <Route path="/" element={<Home />} />
-//     <Route path="/login" element={<Login />} />
-//     <Route path="/logout" element={<Logout />} />
-//     <Route path="/register" element={<Register />} />
-//     <Route path="/createRecipe" element={<CreateRecipe />} />
-//     <Route path="/savedRecipes" element={<SavedRecipes />} />
-//     <Route path="/updateRecipe" element={<UpdateRecipe />} />
-//     <Route path="/help" element={<Help />} />
-//     <Route path="/all" element={<GetAllRecipes />} />
-// </Routes>
+
 
 export default [
   route('/', './pages/HomePage/index.tsx', [
