@@ -1,7 +1,8 @@
 const Recipe = require("./recipe.model");
+const {ObjectId} = require('mongoose')
 
 exports.findAllRecipes = async () => {
-  return await Recipe.find();
+  return await Recipe.find().populate('userOwner', '-__v -password').select('-__v')
 };
 
 exports.createRecipe = async (recipeData) => {
@@ -10,7 +11,7 @@ exports.createRecipe = async (recipeData) => {
 };
 
 exports.findRecipeById = async (id) => {
-  return await Recipe.findById(id);
+  return await Recipe.find({userOwner: id}).select('-__v')
 };
 
 exports.updateRecipe = async (id, data) => {

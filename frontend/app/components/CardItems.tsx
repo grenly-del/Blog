@@ -6,19 +6,16 @@ interface CardItemParams {
   nama_pembuat: string;
   id_item: string;
   img: string;
-  onUpdate?: () => void; // Optional function for update
-  onDelete?: () => void; // Optional function for delete
+  isUser?: string
 }
 
 const CardItems: React.FC<CardItemParams> = ({ 
   nama_pembuat, 
   nama_resep, 
   id_item, 
-  img, 
-  onUpdate, 
-  onDelete 
+  img,
+  isUser
 }) => {
-  const token: any = Cookies.get('auth_token') || '';
 
   return (
     <section className="relative bg-white w-[300px] rounded-xl overflow-hidden shadow-lg shadow-gray-200">
@@ -27,23 +24,23 @@ const CardItems: React.FC<CardItemParams> = ({
           <img src={img} alt={nama_resep} className="w-full hover:scale-105 transition-all duration-200" />
         </div>
         <div className="px-5 py-3">
-          <h1 className="text-lg font-bold">{nama_resep}</h1>
-          <p className="text-sm font-semibold mt-2">Dibuat Oleh : <span className="font-normal">{nama_pembuat}</span></p>
-          <button className="text-sm text-primary mt-7 cursor-pointer">{'Selengkapnya >> '}</button>
+        <h3 className="text-lg mb-1 font-bold text-gray-900 ">{nama_resep}</h3>
+          <p className="text-sm text-gray-600 mb-2">
+                  <strong>Dibuat oleh:</strong> {nama_pembuat}
+                </p>
+          <button className="text-sm text-primary mt-7 cursor-pointer">{'Lihat >> '}</button>
         </div>
-        {token.length > 0 && (
-          <div className="flex items-center gap-x-5 absolute bottom-3 right-3">
+        {isUser === "true" && (
+          <div className="flex items-center gap-x-5 absolute bottom-5 right-3">
             <button 
               className="cursor-pointer"
-              onClick={onUpdate} // Call onUpdate when clicked
             >
-              <img src="./icons/updateIcon.svg" alt="Update" width={15} />
+              <img src="./icons/updateIcon.svg" alt="Update" width={16} />
             </button>
             <button 
               className="cursor-pointer"
-              onClick={onDelete} // Call onDelete when clicked
             >
-              <img src="./icons/deleteIcon.svg" alt="Delete" width={13} />
+              <img src="./icons/deleteIcon.svg" alt="Delete" width={16} />
             </button>
           </div>
         )}

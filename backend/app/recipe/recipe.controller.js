@@ -1,51 +1,57 @@
+const { HTTP_STATUS_CODE } = require("../../constant/httpCode");
+const { appRes } = require("../../utils/appRes");
 const recipeService = require("./recipe.service");
 
 exports.getAllRecipes = async (req, res) => {
   try {
     const recipes = await recipeService.getAllRecipes();
-    return res.json({ success: true, data: recipes });
+    appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil mengambil resep!', recipes)
   } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
+    console.log(err)
+    next(err)
   }
 };
 
-exports.getRecipeById = async (req, res) => {
+exports.getRecipeById = async (req, res, next) => {
   try {
-    const recipe = await recipeService.getRecipeById(req.params.id);
-    return res.json({ success: true, data: recipe });
+    const userId = req.user.userId
+    const recipe = await recipeService.getRecipeById(userId);
+    appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil ambil data', recipe)
   } catch (err) {
-    return res.status(404).json({ success: false, message: err.message });
+    console.log(err)
+    next(err)
   }
 };
 
-exports.createRecipe = async (req, res) => {
+exports.createRecipe = async (req, res, next) => {
   try {
-    const { name, ingredients, instructions, cookingTime, userOwner } = req.body;
+    const { name, ingredients, instructions, cookingTime } = req.body;
 
     // Basic validation
     if (!name || !ingredients || !instructions || !cookingTime) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
+      throw new Error("All fields are required")
     }
 
     const parsedIngredients = typeof ingredients === "string" ? JSON.parse(ingredients) : ingredients;
+    console.log(parsedIngredients)
 
     if (!Array.isArray(parsedIngredients)) {
-      return res.status(400).json({ success: false, message: "Ingredients must be an array" });
+      throw new Error("Ingredients must be an array")
     }
 
     if (parsedIngredients.some((item) => item.length > 40)) {
-      return res.status(400).json({ success: false, message: "Ingredients cannot exceed 40 characters each" });
+      throw new Error("Ingredients cannot exceed 40 characters each")
     }
 
     if (instructions.length > 200) {
-      return res.status(400).json({ success: false, message: "Instructions cannot exceed 200 characters" });
+      throw new Error("Instructions cannot exceed 200 characters")
     }
 
     const imageUrl = req.file?.path || req.file?.secure_url;
     const userId = req.user?.userId || userOwner;
 
     if (!userId) {
-      return res.status(400).json({ success: false, message: "User is not authenticated" });
+      throw new Error("User is not authenticated")
     }
 
     const newRecipe = await recipeService.createRecipe(
@@ -59,38 +65,41 @@ exports.createRecipe = async (req, res) => {
       userId,
       imageUrl
     );
-
-    return res.status(201).json({ success: true, data: newRecipe });
+    appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil membuat resep!')
   } catch (err) {
-    return res.status(400).json({ success: false, message: err.message });
+    console.log(err)
+    next(err)
   }
 };
 
-exports.updateRecipe = async (req, res) => {
+exports.updateRecipe = async (req, res, next) => {
   try {
     const updated = await recipeService.updateRecipe(req.params.id, req.body);
-    return res.json({ success: true, data: updated });
+    appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil mengubah', updated)
   } catch (err) {
-    return res.status(400).json({ success: false, message: err.message });
+    console.log(err)
+    next(err)
   }
 };
 
-exports.deleteRecipe = async (req, res) => {
+exports.deleteRecipe = async (req, res, next) => {
   try {
     await recipeService.deleteRecipe(req.params.id);
-    return res.json({ success: true, message: "Recipe deleted" });
+    appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil menghapus!')
   } catch (err) {
-    return res.status(404).json({ success: false, message: err.message });
+    console.log(err)
+    next(err)
   }
 };
 
 
-exports.getSavedRecipes = async (req, res) => {
+exports.getSavedRecipes = async (req, res, next) => {
   try {
     const { userId } = req.params;
     const savedRecipes = await recipeService.getSavedRecipes(userId);
-    return res.json({ success: true, data: savedRecipes });
+    appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil', savedRecipes)
   } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
+    console.log(err)
+    next(err)
   }
 };
