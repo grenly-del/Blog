@@ -8,9 +8,14 @@ import 'swiper/css/pagination';
 import 'swiper/css/grid';
 import './swiper.css'
 import 'swiper/css';
+import { useAppDispatch } from '~/redux/store';
+import { logout } from '~/redux/features/auth';
+import { useNavigate } from 'react-router';
 
 
 export default function Dashboard() {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const [popupActive, setPopupActive] = useState(false);
   const pagination = {
     clickable: true
@@ -98,6 +103,12 @@ export default function Dashboard() {
     // Tambahkan data lainnya sesuai kebutuhan
   ];
 
+
+  const handleLogout = async () => {
+    await dispatch(logout())
+    navigate('/')
+  }
+
   return (
     <div>
       <header className="flex justify-between items-center px-10 py-5 bg-white relative">
@@ -109,10 +120,10 @@ export default function Dashboard() {
           </button>
         </div>
         {popupActive && (
-          <div className="w-[250px] flex items-center justify-between px-5 py-2 bg-white border-[0.5px] border-gray-100 right-10 top-20 absolute hover:bg-gray-50 cursor-pointer">
+          <button onClick={handleLogout} className="w-[250px] flex items-center justify-between px-5 py-2 bg-white border-[0.5px] border-gray-100 right-10 top-20 absolute hover:bg-gray-50 cursor-pointer">
             <p className="text-[#D73434]">Keluar</p>
             <img src="./icons/iconOut.svg" alt="" />
-          </div>
+          </button>
         )}
       </header>
 

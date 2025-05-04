@@ -33,7 +33,7 @@ const AuthSlice = createSlice({
                 Cookies.set('auth_token', action.payload)
             }
         },
-        logout: (state, action) => {
+        logout: (state) => {
             Cookies.remove('auth_token')
         }
     }
