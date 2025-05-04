@@ -20,7 +20,7 @@ exports.getRecipeById = async (req, res) => {
 
 exports.createRecipe = async (req, res) => {
   try {
-    const { name, ingredients, instructions, cookingTime, userOwner } = req.body;
+    const { name, ingredients, instructions, cookingTime } = req.body;
 
     // Basic validation
     if (!name || !ingredients || !instructions || !cookingTime) {
