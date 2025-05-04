@@ -48,17 +48,13 @@ const RecipeListing: React.FC = () => {
       <div className="w-full px-20 mx-auto p-4">
         <h1 className="text-3xl font-bold text-orange-700 mb-4">All Recipes</h1>
         <div className="flex justify-center items-center gap-6 flex-wrap">
-          {recipes.map((recipe) => (
             <CardItems
-              key={recipe._id}
+              key="1"
               nama_pembuat="Grantly Sorongan"
-              nama_resep={recipe.name}
-              img={recipe.imageUrl}
-              id_item={recipe._id}
-              onUpdate={() => handleUpdate(recipe)}
-              onDelete={() => handleDelete(recipe._id)}
+              nama_resep="Nasi Goreng"
+              img="./images/nasi-goreng.jpeg"
+              id_item="124"
             />
-          ))}
         </div>
       </div>
     </div>
