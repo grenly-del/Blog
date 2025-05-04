@@ -45,29 +45,6 @@ const deleteRecipe = async (id) => {
   return await recipeRepository.deleteRecipe(id);
 };
 
-const saveRecipe = async (id, userId) => {
-  const recipe = await recipeRepository.findRecipeById(id);
-  if (!recipe) throw new Error("Recipe not found");
-
-  const user = await userRepository.findUserById(userId);
-  if (!user) throw new Error("User not found");
-
-  if (!user.savedRecipes.includes(id)) {
-    user.savedRecipes.push(id);
-    await user.save();
-  }
-
-  return recipe;
-};
-
-const getSavedRecipes = async (userId) => {
-  const user = await userRepository.findUserById(userId);
-  if (!user) throw new Error("User not found");
-
-  const savedRecipes = await recipeRepository.findRecipesByIds(user.savedRecipes);
-  return savedRecipes;
-};
-
 const uploadImageToCloudinary = async (imagePath) => {
   try {
 
@@ -88,7 +65,5 @@ module.exports = {
   getRecipeById,
   updateRecipe,
   deleteRecipe,
-  saveRecipe,
-  getSavedRecipes,
   uploadImageToCloudinary,
 };

@@ -13,10 +13,6 @@ exports.findRecipeById = async (id) => {
   return await Recipe.findById(id);
 };
 
-exports.findRecipesByIds = async (ids) => {
-  return await Recipe.find({ _id: { $in: ids } });
-};
-
 exports.updateRecipe = async (id, data) => {
   return await Recipe.findByIdAndUpdate(id, data, { new: true });
 };
