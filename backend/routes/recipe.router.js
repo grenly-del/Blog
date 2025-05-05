@@ -17,10 +17,12 @@ router.post("/",verifyToken, upload.single("image"), recipeController.createReci
 router.get("/", recipeController.getAllRecipes);
 
 // READ - Ambil resep berdasarkan ID
-router.get("/with-id", verifyToken, recipeController.getRecipeById);
+router.get("/with-id", verifyToken, recipeController.getRecipeByUserId);
 
 // UPDATE - Update resep (termasuk upload gambar baru)
 router.put("/:id", upload.single("image"), recipeController.updateRecipe);
+
+router.get("/:id", verifyToken, recipeController.getRecipeById);
 
 // DELETE - Hapus resep berdasarkan ID
 router.delete("/:id", recipeController.deleteRecipe);

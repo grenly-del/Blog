@@ -15,7 +15,6 @@ const createRecipe = async (recipeData, userId, imagePath) => {
   let imageUrl = "";
   if (imagePath) {
     imageUrl = await uploadImageToCloudinary(imagePath);
-    
   }
 
   const newRecipe = {
@@ -27,6 +26,12 @@ const createRecipe = async (recipeData, userId, imagePath) => {
   return await recipeRepository.createRecipe(newRecipe);
 };
 
+const getRecipeByUserId = async (id) => {
+  const recipe = await recipeRepository.findRecipeByUserId(id);
+  if (!recipe) throw new Error("Recipe not found");
+  return recipe;
+};
+
 const getRecipeById = async (id) => {
   const recipe = await recipeRepository.findRecipeById(id);
   if (!recipe) throw new Error("Recipe not found");
@@ -36,6 +41,12 @@ const getRecipeById = async (id) => {
 const updateRecipe = async (id, data) => {
   const recipe = await recipeRepository.findRecipeById(id);
   if (!recipe) throw new Error("Recipe not found");
+  console.log(data);
+  if (data.imageUrl) {
+    const imageUrl = await uploadImageToCloudinary(data.imageUrl);
+    data.imageUrl = imageUrl;
+  }
+
   return await recipeRepository.updateRecipe(id, data);
 };
 
@@ -47,7 +58,6 @@ const deleteRecipe = async (id) => {
 
 const uploadImageToCloudinary = async (imagePath) => {
   try {
-
     const result = await cloudinary.uploader.upload(imagePath, {
       resource_type: "image",
       folder: "recipes",
@@ -62,6 +72,7 @@ const uploadImageToCloudinary = async (imagePath) => {
 module.exports = {
   getAllRecipes,
   createRecipe,
+  getRecipeByUserId,
   getRecipeById,
   updateRecipe,
   deleteRecipe,

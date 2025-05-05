@@ -12,16 +12,28 @@ exports.getAllRecipes = async (req, res) => {
   }
 };
 
-exports.getRecipeById = async (req, res, next) => {
+exports.getRecipeByUserId = async (req, res, next) => {
   try {
     const userId = req.user.userId
-    const recipe = await recipeService.getRecipeById(userId);
+    const recipe = await recipeService.getRecipeByUserId(userId);
     appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil ambil data', recipe)
   } catch (err) {
     console.log(err)
     next(err)
   }
 };
+
+exports.getRecipeById = async (req, res, next) => {
+  try {
+    const recipe = await recipeService.getRecipeById(req.params.id);
+    appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil ambil data', recipe)
+  } catch (err) {
+    console.log(err)
+    next(err)
+  }
+
+}
+
 
 exports.createRecipe = async (req, res, next) => {
   try {
@@ -72,9 +84,16 @@ exports.createRecipe = async (req, res, next) => {
   }
 };
 
+
+
 exports.updateRecipe = async (req, res, next) => {
+  const newRecipeData = {
+    ...req.body,
+    imageUrl: req.file?.path || req.file?.secure_url,
+  }
   try {
-    const updated = await recipeService.updateRecipe(req.params.id, req.body);
+    console.log(req.body)
+    const updated = await recipeService.updateRecipe(req.params.id, newRecipeData);
     appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil mengubah', updated)
   } catch (err) {
     console.log(err)
@@ -85,6 +104,7 @@ exports.updateRecipe = async (req, res, next) => {
 exports.deleteRecipe = async (req, res, next) => {
   try {
     await recipeService.deleteRecipe(req.params.id);
+    console.log(req.params.id)
     appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil menghapus!')
   } catch (err) {
     console.log(err)

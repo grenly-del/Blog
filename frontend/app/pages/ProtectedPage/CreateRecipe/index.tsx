@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import RequestAxios from "../../../config/axiosConfig";
 import { FaCamera } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 interface FormData {
   name: string;
@@ -24,6 +25,7 @@ const CreateRecipe: React.FC = () => {
   });
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -70,21 +72,41 @@ const CreateRecipe: React.FC = () => {
     }
 
     try {
-      const response = await RequestAxios.post("/recipe/addrecipe", form, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      setLoading(true);
+      const response = await RequestAxios.post(
+        "http://localhost:3005/api/v1/recipe",
+        form,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-      if (response.status === 201) {
-        console.log("Recipe created successfully");
-        navigate("/"); // Redirect after successful creation
+      console.log("Response:", response);
+
+      if (response.status === 200) {
+        toast.success("Recipe created successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        navigate("/protect-page");
       } else {
-        console.log("Recipe creation failed");
+        toast.error("Recipe creation failed", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }
     } catch (error: unknown) {
       console.error("Error occurred:", error);
-
       if (error instanceof AxiosError) {
         console.error(
           "Server returned an error with status:",
@@ -94,6 +116,16 @@ const CreateRecipe: React.FC = () => {
       } else {
         console.error("Unknown error occurred:", error);
       }
+      toast.error("An error occurred while creating the recipe", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -104,10 +136,20 @@ const CreateRecipe: React.FC = () => {
           Create Recipe
         </h1>
 
+        {/* Back Button */}
+        <button
+          type="button"
+          onClick={() => navigate("/protect-page")}
+          className="mb-4 px-4 py-2 bg-orange-400 text-white rounded hover:bg-orange-500 transition cursor-pointer"
+        >
+          ← Back
+        </button>
+
         <form
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-lg shadow-lg"
         >
+          {/* Recipe Name */}
           <div className="mb-4">
             <label className="block text-gray-600 font-semibold mb-2">
               Recipe Name
@@ -122,6 +164,7 @@ const CreateRecipe: React.FC = () => {
             />
           </div>
 
+          {/* Ingredients */}
           <div className="mb-4">
             <label className="block text-gray-600 font-semibold mb-2">
               Ingredients (comma-separated)
@@ -136,6 +179,7 @@ const CreateRecipe: React.FC = () => {
             ></textarea>
           </div>
 
+          {/* Instructions */}
           <div className="mb-4">
             <label className="block text-gray-600 font-semibold mb-2">
               Instructions
@@ -150,6 +194,7 @@ const CreateRecipe: React.FC = () => {
             ></textarea>
           </div>
 
+          {/* Cooking Time */}
           <div className="mb-4">
             <label className="block text-gray-600 font-semibold mb-2">
               Cooking Time (minutes)
@@ -164,12 +209,12 @@ const CreateRecipe: React.FC = () => {
             />
           </div>
 
+          {/* Image Upload */}
           <div className="mb-4">
             <label className="block text-gray-600 font-semibold mb-2">
               Image
             </label>
             <div className="flex items-center space-x-4">
-              {/* Custom Input Style for Image */}
               <label className="w-20 h-20 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer">
                 <FaCamera className="text-gray-500 text-2xl" />
                 <input
@@ -182,7 +227,6 @@ const CreateRecipe: React.FC = () => {
                 />
               </label>
 
-              {/* Display the preview image */}
               {previewImage && (
                 <div className="w-20 h-20 overflow-hidden rounded-lg border border-gray-300">
                   <img
@@ -195,12 +239,16 @@ const CreateRecipe: React.FC = () => {
             </div>
           </div>
 
+          {/* Submit Button */}
           <div className="text-center">
             <button
               type="submit"
-              className="bg-orange-700 text-white px-6 py-2 rounded-full cursor-pointer hover:bg-orange-600 transition duration-300"
+              className={`bg-orange-700 text-white px-6 py-2 rounded-full cursor-pointer hover:bg-orange-600 transition duration-300 ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={loading}
             >
-              Create Recipe
+              {loading ? "Creating..." : "Create Recipe"}
             </button>
           </div>
         </form>

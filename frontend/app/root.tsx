@@ -6,13 +6,10 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-
 import type { Route } from "./+types/root";
 import "./app.css";
-// import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContext"; // Make sure AuthProvider is correctly imported
 import { Provider } from "react-redux";
-import TopNavBar from "./components/TopNavBar";
-import Footer from "./components/Footer";
 import store from "./redux/store";
 import { ToastContainer } from "react-toastify";
 
@@ -48,10 +45,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return  <Provider store={store}>
-              <Outlet />
-              <ToastContainer />
-          </Provider>;
+  return (
+    <Provider store={store}>
+      {/* Wrap the application with AuthProvider to provide the authentication context */}
+        <Outlet />
+        <ToastContainer />
+    </Provider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
