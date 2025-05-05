@@ -52,7 +52,9 @@ const Login: React.FC = () => {
     }
   };
 
-  if (isLoggedIn) return <Navigate to="/protect-page" />;
+  if (isLoggedIn) {
+    window.location.href = '/protect-page'
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">

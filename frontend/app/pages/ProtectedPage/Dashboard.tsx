@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "~/redux/store";
-import { GetRecipeById } from "~/redux/features/recipes";
-import { logout } from "~/redux/features/auth";
+import { GetAllRecipe, GetAllRecipeByUser } from "~/redux/features/recipes";
 import CardItems from "~/components/CardItems";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -14,42 +13,31 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/grid";
 import "./swiper.css";
+import { logoutThunk } from "~/redux/features/logoutThunk";
 
 const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
+  const recipeUser = useAppSelector(state => state.recipe)
   const navigate = useNavigate();
   const [popupActive, setPopupActive] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const { data: recipes, loading } = useAppSelector((state) => state.recipe);
+  const token = Cookies.get("auth_token");
+  
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = Cookies.get("auth_token");
-        setUser(jwtDecode(token ?? ""));
-        if (token) {
-          const response = await axios.get(
-            "http://localhost:3005/api/v1/user",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
+    setUser(jwtDecode(token ?? ""));
+  }, [])
 
-    fetchUserData();
-    dispatch(GetRecipeById(user?._id || ""));
-  }, [dispatch, user?.userId]);
+  useEffect(() => {
+    dispatch(GetAllRecipeByUser());
+  }, []);
 
   const handleLogout = async () => {
-    await dispatch(logout());
-    navigate("/");
+    await dispatch(logoutThunk());
+    window.location.href = '/'
+
     toast.success("Berhasil Logout!");
   };
 
@@ -59,7 +47,7 @@ const Dashboard: React.FC = () => {
         await axios.delete(
           `http://localhost:3005/api/v1/recipe/${confirmDeleteId}`
         );
-        dispatch(GetAllRecipe());
+        // dispatch(GetAllRecipe());
         setConfirmDeleteId(null);
         toast.success("Resep berhasil dihapus!", {
           position: "top-right",
@@ -86,6 +74,11 @@ const Dashboard: React.FC = () => {
   const handleUpdate = (id) => {
     navigate(`/updateRecipe/${id}`);
   };
+
+
+  useEffect(() => {
+    console.log(recipeUser)
+  }, [recipeUser])
 
   return (
     <div>
@@ -157,7 +150,7 @@ const Dashboard: React.FC = () => {
           <div className="flex justify-center py-10">
             <div className="loader"></div>
           </div>
-        ) : recipes.length === 0 ? (
+        ) : recipeUser.filter_data?.length == 0 ? (
           <section className="flex flex-col items-center justify-center py-20 text-gray-700">
             <p className="text-lg font-semibold mb-5">
               Kamu belum memiliki resep!
@@ -186,7 +179,7 @@ const Dashboard: React.FC = () => {
               className="mySwiper"
             >
               <div className="flex justify-start gap-5">
-                {recipes.map((recipe) => (
+                {recipeUser.filter_data?.map((recipe) => (
                   <SwiperSlide key={recipe._id}>
                     <CardItems
                       key={recipe._id}
@@ -194,7 +187,7 @@ const Dashboard: React.FC = () => {
                       nama_resep={recipe.name ?? ""}
                       img={recipe.imageUrl ?? ""}
                       id_item={recipe._id ?? ""}
-                      onDelete={() => setConfirmDeleteId(recipe._id)}
+                      onDelete={() => setConfirmDeleteId(recipe._id??"")}
                       onUpdate={() => handleUpdate(recipe._id)}
                     />
                   </SwiperSlide>
