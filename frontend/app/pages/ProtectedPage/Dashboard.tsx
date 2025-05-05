@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "~/redux/store";
-import { GetAllRecipe } from "~/redux/features/recipes";
+import { GetRecipeById } from "~/redux/features/recipes";
 import { logout } from "~/redux/features/auth";
 import CardItems from "~/components/CardItems";
 import { useNavigate } from "react-router-dom";
@@ -43,8 +43,8 @@ const Dashboard: React.FC = () => {
     };
 
     fetchUserData();
-    dispatch(GetAllRecipe());
-  }, [dispatch]);
+    dispatch(GetRecipeById(user?._id || ""));
+  }, [dispatch, user?._id]);
 
   const handleLogout = async () => {
     await dispatch(logout());
