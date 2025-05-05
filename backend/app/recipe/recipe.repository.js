@@ -13,7 +13,7 @@ exports.createRecipe = async (recipeData) => {
 };
 
 exports.findRecipeByUserId = async (id) => {
-  return await Recipe.find({ userOwner: id }).select("-__v");
+  return await Recipe.find({ userOwner: id }).populate('userOwner').select("-__v");
 };
 
 exports.findRecipeById = async (id) => {

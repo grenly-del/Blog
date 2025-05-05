@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit"
 import axios from 'axios'
-
 import Cookies from 'js-cookie'
 import {jwtDecode } from 'jwt-decode'
+import { clearRecipe } from "./recipes";
 
 interface MyToken {
     userId: string

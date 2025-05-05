@@ -23,6 +23,7 @@ interface ResponseRecipe {
   success: boolean;
   error: boolean;
   loading: boolean;
+  filter_data?: Recipe[]
 }
 
 const initialValue: ResponseRecipe = {
@@ -31,6 +32,7 @@ const initialValue: ResponseRecipe = {
   success: false,
   error: false,
   loading: false,
+  filter_data: []
 };
 
 interface RecipeResponseAxios extends AxiosResponse {
@@ -58,16 +60,16 @@ export const GetAllRecipe = createAsyncThunk<
   }
 });
 
-export const GetRecipeById = createAsyncThunk<
-  Recipe, // response
-  string, // id as argument
+export const GetAllRecipeByUser = createAsyncThunk<
+  any,
+  void,
   { rejectValue: string }
->("recipe/getRecipeById", async (id, { rejectWithValue }) => {
+>("recipe/getAllRecipeByUser", async (_, { rejectWithValue }) => {
   try {
     const response = await axiosConfig.get<RecipeResponseAxios>(
-      `/recipe/with-id`
+      "/recipe/with-id"
     );
-    return response.data.payload; // jika payload array berisi satu objek
+    return response.data.payload;
   } catch (error: any) {
     return rejectWithValue(
       error.response?.data?.payload?.message ||
@@ -80,14 +82,18 @@ export const GetRecipeById = createAsyncThunk<
 const RecipeSlice = createSlice({
   name: "recipe",
   initialState: initialValue,
-  reducers: {},
+  reducers: {
+    clearRecipe: (state) => {
+      state.filter_data = []
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(GetAllRecipe.pending, (state) => {
       state.loading = true;
       state.success = false;
       state.error = false;
       state.message = "";
-    });
+    })
     builder.addCase(
       GetAllRecipe.fulfilled,
       (state, action: PayloadAction<RecipeResponseAxios>) => {
@@ -97,7 +103,7 @@ const RecipeSlice = createSlice({
         state.data = action.payload.payload;
         state.message = action.payload.message;
       }
-    );
+    )
     builder.addCase(
       GetAllRecipe.rejected,
       (state, action: PayloadAction<any>) => {
@@ -106,33 +112,35 @@ const RecipeSlice = createSlice({
         state.error = true;
         state.message = action.payload || "Terjadi kesalahan!";
       }
-    );
-    builder.addCase(GetRecipeById.pending, (state) => {
+    )
+    builder.addCase(GetAllRecipeByUser.pending, (state) => {
       state.loading = true;
       state.success = false;
       state.error = false;
       state.message = "";
-    });
+    })
     builder.addCase(
-      GetRecipeById.fulfilled,
-      (state, action: PayloadAction<RecipeResponseAxios>) => {
+      GetAllRecipeByUser.fulfilled,
+      (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.success = true;
         state.error = false;
-        state.data = action.payload.payload;
+        state.filter_data = action.payload.payload;
         state.message = action.payload.message;
       }
-    );
+    )
     builder.addCase(
-      GetRecipeById.rejected,
+      GetAllRecipeByUser.rejected,
       (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.success = false;
         state.error = true;
         state.message = action.payload || "Terjadi kesalahan!";
       }
-    );
+    )
   },
 });
 
+
+export const {clearRecipe} = RecipeSlice.actions
 export default RecipeSlice.reducer;
