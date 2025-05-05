@@ -10,41 +10,52 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Grid } from "swiper/modules";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
+
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/grid";
 import "./swiper.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const [popupActive, setPopupActive] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const { data: recipes, loading } = useAppSelector((state) => state.recipe);
 
+  // Fetch user from token
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = Cookies.get("auth_token");
-        setUser(jwtDecode(token ?? ""));
-        if (token) {
-          const response = await axios.get(
-            "http://localhost:3005/api/v1/user",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+        if (!token) {
+          toast.error("Token tidak ditemukan");
+          navigate("/");
+          return;
         }
+
+        const decoded = jwtDecode(token);
+        setUser(decoded);
+
+        await axios.get("http://localhost:3005/api/v1/user", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
 
     fetchUserData();
-    dispatch(GetRecipeById(user?._id || ""));
+  }, [navigate]);
+
+  // Fetch resep setelah user siap
+  useEffect(() => {
+    if (user?.userId) {
+      dispatch(GetRecipeById(user.userId));
+    }
   }, [dispatch, user?.userId]);
 
   const handleLogout = async () => {
@@ -59,31 +70,17 @@ const Dashboard: React.FC = () => {
         await axios.delete(
           `http://localhost:3005/api/v1/recipe/${confirmDeleteId}`
         );
-        dispatch(GetAllRecipe());
+        dispatch(GetRecipeById(user?.userId || ""));
         setConfirmDeleteId(null);
-        toast.success("Resep berhasil dihapus!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
+        toast.success("Resep berhasil dihapus!");
       } catch (error) {
         console.error("Error deleting recipe:", error);
-        toast.error("Gagal menghapus resep!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
+        toast.error("Gagal menghapus resep!");
       }
     }
   };
 
-  const handleUpdate = (id) => {
+  const handleUpdate = (id: string) => {
     navigate(`/updateRecipe/${id}`);
   };
 
@@ -94,17 +91,14 @@ const Dashboard: React.FC = () => {
         <div className="text-3xl font-bold">DiagnoAI</div>
         <div className="flex items-center gap-x-3 text-gray-800 font-semibold">
           <p>{user?.username || "Grantly"}</p>
-          <button
-            onClick={() => setPopupActive(!popupActive)}
-            className="cursor-pointer"
-          >
+          <button onClick={() => setPopupActive(!popupActive)}>
             <img src="./icons/userIcon.svg" alt="User Icon" width={40} />
           </button>
         </div>
         {popupActive && (
           <button
             onClick={handleLogout}
-            className="absolute right-5 top-16 px-5 py-2 bg-white border border-gray-100 hover:bg-gray-50 rounded-md"
+            className="absolute right-5 top-16 px-5 py-2 bg-white border hover:bg-gray-50 rounded-md"
           >
             <p className="text-[#D73434]">Keluar</p>
             <img src="./icons/iconOut.svg" alt="Logout Icon" />
@@ -123,13 +117,13 @@ const Dashboard: React.FC = () => {
             <div className="flex justify-between gap-3 mt-4">
               <button
                 onClick={() => setConfirmDeleteId(null)}
-                className="w-full px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                className="w-full px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
               >
                 Batal
               </button>
               <button
                 onClick={handleDeleteConfirmed}
-                className="w-full px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 cursor-pointer"
+                className="w-full px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600"
               >
                 Hapus
               </button>
@@ -146,8 +140,8 @@ const Dashboard: React.FC = () => {
             <h2 className="text-xl font-semibold">RESEP KAMU</h2>
           </div>
           <button
-            onClick={() => navigate("/createRecipe")}
-            className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 flex items-center cursor-pointer"
+            onClick={() => navigate("/protect-page/createRecipe")}
+            className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 flex items-center"
           >
             Tambah Resep
           </button>
@@ -163,7 +157,7 @@ const Dashboard: React.FC = () => {
               Kamu belum memiliki resep!
             </p>
             <button
-              onClick={() => navigate("/createRecipe")}
+              onClick={() => navigate("protect-page/createRecipe")}
               className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600"
             >
               Tambahkan Resep Pertama Kamu
@@ -185,21 +179,18 @@ const Dashboard: React.FC = () => {
               modules={[Pagination, Grid]}
               className="mySwiper"
             >
-              <div className="flex justify-start gap-5">
-                {recipes.map((recipe) => (
-                  <SwiperSlide key={recipe._id}>
-                    <CardItems
-                      key={recipe._id}
-                      nama_pembuat={recipe?.userOwner?.name}
-                      nama_resep={recipe.name ?? ""}
-                      img={recipe.imageUrl ?? ""}
-                      id_item={recipe._id ?? ""}
-                      onDelete={() => setConfirmDeleteId(recipe._id)}
-                      onUpdate={() => handleUpdate(recipe._id)}
-                    />
-                  </SwiperSlide>
-                ))}
-              </div>
+              {recipes.map((recipe) => (
+                <SwiperSlide key={recipe._id}>
+                  <CardItems
+                    nama_pembuat={recipe?.userOwner?.name}
+                    nama_resep={recipe.name ?? ""}
+                    img={recipe.imageUrl ?? ""}
+                    id_item={recipe._id ?? ""}
+                    onDelete={() => setConfirmDeleteId(recipe._id)}
+                    onUpdate={() => handleUpdate(recipe._id)}
+                  />
+                </SwiperSlide>
+              ))}
             </Swiper>
           </section>
         )}
