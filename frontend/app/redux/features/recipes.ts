@@ -4,6 +4,7 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import axios, { Axios, type AxiosResponse } from "axios";
+import axiosConfig from "../../config/axiosConfig";
 
 interface Recipe {
   _id?: string;
@@ -63,10 +64,10 @@ export const GetRecipeById = createAsyncThunk<
   { rejectValue: string }
 >("recipe/getRecipeById", async (id, { rejectWithValue }) => {
   try {
-    const response = await axios.get<RecipeResponseAxios>(
-      `http://localhost:3005/api/v1/recipe/${id}`
+    const response = await axiosConfig.get<RecipeResponseAxios>(
+      `/recipe/with-id`
     );
-    return response.data.payload[0]; // jika payload array berisi satu objek
+    return response.data.payload; // jika payload array berisi satu objek
   } catch (error: any) {
     return rejectWithValue(
       error.response?.data?.payload?.message ||
@@ -99,6 +100,31 @@ const RecipeSlice = createSlice({
     );
     builder.addCase(
       GetAllRecipe.rejected,
+      (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.success = false;
+        state.error = true;
+        state.message = action.payload || "Terjadi kesalahan!";
+      }
+    );
+    builder.addCase(GetRecipeById.pending, (state) => {
+      state.loading = true;
+      state.success = false;
+      state.error = false;
+      state.message = "";
+    });
+    builder.addCase(
+      GetRecipeById.fulfilled,
+      (state, action: PayloadAction<RecipeResponseAxios>) => {
+        state.loading = false;
+        state.success = true;
+        state.error = false;
+        state.data = action.payload.payload;
+        state.message = action.payload.message;
+      }
+    );
+    builder.addCase(
+      GetRecipeById.rejected,
       (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.success = false;

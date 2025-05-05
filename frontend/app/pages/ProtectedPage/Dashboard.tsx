@@ -9,6 +9,7 @@ import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Grid } from "swiper/modules";
 import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/grid";
@@ -26,6 +27,7 @@ const Dashboard: React.FC = () => {
     const fetchUserData = async () => {
       try {
         const token = Cookies.get("auth_token");
+        setUser(jwtDecode(token ?? ""));
         if (token) {
           const response = await axios.get(
             "http://localhost:3005/api/v1/user",
@@ -35,7 +37,6 @@ const Dashboard: React.FC = () => {
               },
             }
           );
-          setUser(response.data?.payload ?? null);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -44,7 +45,7 @@ const Dashboard: React.FC = () => {
 
     fetchUserData();
     dispatch(GetRecipeById(user?._id || ""));
-  }, [dispatch, user?._id]);
+  }, [dispatch, user?.userId]);
 
   const handleLogout = async () => {
     await dispatch(logout());
@@ -92,7 +93,7 @@ const Dashboard: React.FC = () => {
       <header className="flex justify-between items-center px-5 py-4 bg-white relative shadow-md">
         <div className="text-3xl font-bold">DiagnoAI</div>
         <div className="flex items-center gap-x-3 text-gray-800 font-semibold">
-          <p>{user?.name || "Grantly"}</p>
+          <p>{user?.username || "Grantly"}</p>
           <button
             onClick={() => setPopupActive(!popupActive)}
             className="cursor-pointer"
