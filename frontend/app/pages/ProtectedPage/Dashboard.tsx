@@ -9,6 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Grid } from "swiper/modules";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
+import "react-toastify/dist/ReactToastify.css";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -18,19 +19,21 @@ import { logoutThunk } from "~/redux/features/logoutThunk";
 
 const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
-  const recipeUser = useAppSelector(state => state.recipe)
+  const recipeUser = useAppSelector((state) => state.recipe);
   const navigate = useNavigate();
 
   const [popupActive, setPopupActive] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const { data: recipes, loading } = useAppSelector((state) => state.recipe);
+  const [selectedRecipe, setSelectedRecipe] = useState<any>(null);
+  const [showDetailPopup, setShowDetailPopup] = useState(false);
+
   const token = Cookies.get("auth_token");
-  
 
   useEffect(() => {
     setUser(jwtDecode(token ?? ""));
-  }, [])
+  }, []);
 
   useEffect(() => {
     dispatch(GetAllRecipeByUser());
@@ -38,9 +41,18 @@ const Dashboard: React.FC = () => {
 
   const handleLogout = async () => {
     await dispatch(logoutThunk());
-    window.location.href = '/'
+    window.location.href = "/";
+    toast.success("Logout Berhasil!");
+  };
 
-    toast.success("Berhasil Logout!");
+  const handleShowDetail = (recipe: any) => {
+    setSelectedRecipe(recipe);
+    setShowDetailPopup(true);
+  };
+
+  const handleCloseDetail = () => {
+    setShowDetailPopup(false);
+    setSelectedRecipe(null);
   };
 
   const handleDeleteConfirmed = async () => {
@@ -49,9 +61,9 @@ const Dashboard: React.FC = () => {
         await axios.delete(
           `http://localhost:3005/api/v1/recipe/${confirmDeleteId}`
         );
-        // dispatch(GetAllRecipe());
         setConfirmDeleteId(null);
         toast.success("Resep berhasil dihapus!");
+        dispatch(GetAllRecipeByUser());
       } catch (error) {
         console.error("Error deleting recipe:", error);
         toast.error("Gagal menghapus resep!");
@@ -63,10 +75,9 @@ const Dashboard: React.FC = () => {
     navigate(`/updateRecipe/${id}`);
   };
 
-
   useEffect(() => {
-    console.log(recipeUser)
-  }, [recipeUser])
+    console.log(recipeUser);
+  }, [recipeUser]);
 
   return (
     <div>
@@ -125,7 +136,7 @@ const Dashboard: React.FC = () => {
           </div>
           <button
             onClick={() => navigate("/protect-page/createRecipe")}
-            className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 flex items-center"
+            className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 flex items-center cursor-pointer"
           >
             Tambah Resep
           </button>
@@ -141,8 +152,8 @@ const Dashboard: React.FC = () => {
               Kamu belum memiliki resep!
             </p>
             <button
-              onClick={() => navigate("protect-page/createRecipe")}
-              className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600"
+              onClick={() => navigate("/protect-page/createRecipe")}
+              className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600 cursor-pointer"
             >
               Tambahkan Resep Pertama Kamu
             </button>
@@ -172,8 +183,9 @@ const Dashboard: React.FC = () => {
                       nama_resep={recipe.name ?? ""}
                       img={recipe.imageUrl ?? ""}
                       id_item={recipe._id ?? ""}
-                      onDelete={() => setConfirmDeleteId(recipe._id??"")}
+                      onDelete={() => setConfirmDeleteId(recipe._id ?? "")}
                       onUpdate={() => handleUpdate(recipe._id)}
+                      onDetail={() => handleShowDetail(recipe)} // Pass onDetail handler
                     />
                   </SwiperSlide>
                 ))}
@@ -182,6 +194,67 @@ const Dashboard: React.FC = () => {
           </section>
         )}
       </main>
+
+      {/* Pop-up Detail Recipe */}
+      {showDetailPopup && selectedRecipe && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
+          <div className="bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full text-left space-y-6 transform transition-all duration-500 ease-in-out opacity-100 scale-100">
+            <button
+              onClick={handleCloseDetail}
+              className="absolute cursor-pointer top-4 right-4 text-xl font-bold text-gray-600 hover:text-gray-900 transition duration-300 ease-in-out"
+            >
+              X
+            </button>
+            <h3 className="text-3xl font-semibold text-center text-orange-600 mb-4">
+              {selectedRecipe.name}
+            </h3>
+            <img
+              src={selectedRecipe.imageUrl}
+              alt={selectedRecipe.name}
+              className="w-full h-60 object-cover rounded-md mb-6 shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105"
+            />
+            <p className="text-lg text-gray-800 mb-4">
+              {selectedRecipe.description}
+            </p>
+            <p className="mt-4 text-sm text-gray-600 font-medium">
+              By:{" "}
+              <span className="text-gray-800">
+                {selectedRecipe.userOwner?.name}
+              </span>
+            </p>
+
+            {/* New Recipe Details */}
+            <div className="mt-6">
+              <h4 className="font-semibold text-xl text-gray-800 mb-2">
+                Ingredients:
+              </h4>
+              <p className="text-lg text-gray-600">
+                {Array.isArray(selectedRecipe.ingredients)
+                  ? selectedRecipe.ingredients.join(", ")
+                  : selectedRecipe.ingredients}
+              </p>
+            </div>
+
+            <div className="mt-6">
+              <h4 className="font-semibold text-xl text-gray-800 mb-2">
+                Instructions:
+              </h4>
+              <p className="text-lg text-gray-600">
+                {selectedRecipe.instructions}
+              </p>
+            </div>
+
+            <div className="mt-6">
+              <h4 className="font-semibold text-xl text-gray-800 mb-2">
+                Cooking Time:
+              </h4>
+              <p className="text-lg text-gray-600">
+                {selectedRecipe.cookingTime}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

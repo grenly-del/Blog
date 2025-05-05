@@ -6,8 +6,9 @@ interface CardItemParams {
   nama_pembuat: string;
   id_item: string;
   img: string;
-  onUpdate?: () => void; // Optional function for update
-  onDelete?: () => void; // Optional function for delete
+  onUpdate?: () => void;
+  onDelete?: () => void;
+  onDetail?: () => void; // Tambahan prop
 }
 
 const CardItems: React.FC<CardItemParams> = ({ 
@@ -16,7 +17,8 @@ const CardItems: React.FC<CardItemParams> = ({
   id_item, 
   img, 
   onUpdate, 
-  onDelete 
+  onDelete,
+  onDetail
 }) => {
   const token: any = Cookies.get('auth_token') || '';
 
@@ -29,20 +31,19 @@ const CardItems: React.FC<CardItemParams> = ({
         <div className="px-5 py-3">
           <h1 className="text-lg font-bold">{nama_resep}</h1>
           <p className="text-sm font-semibold mt-2">Dibuat Oleh : <span className="font-normal">{nama_pembuat}</span></p>
-          <button className="text-sm text-primary mt-7 cursor-pointer">{'Selengkapnya >> '}</button>
+          <button 
+            className="text-sm text-primary mt-7 cursor-pointer"
+            onClick={onDetail} // Memicu detail
+          >
+            {'Selengkapnya >> '}
+          </button>
         </div>
         {token.length > 0 && (
           <div className="flex items-center gap-x-5 absolute bottom-3 right-3">
-            <button 
-              className="cursor-pointer"
-              onClick={onUpdate} // Call onUpdate when clicked
-            >
+            <button className="cursor-pointer" onClick={onUpdate}>
               <img src="./icons/updateIcon.svg" alt="Update" width={15} />
             </button>
-            <button 
-              className="cursor-pointer"
-              onClick={onDelete} // Call onDelete when clicked
-            >
+            <button className="cursor-pointer" onClick={onDelete}>
               <img src="./icons/deleteIcon.svg" alt="Delete" width={13} />
             </button>
           </div>
@@ -50,6 +51,6 @@ const CardItems: React.FC<CardItemParams> = ({
       </div>
     </section>
   );
-}
+};
 
 export default CardItems;
