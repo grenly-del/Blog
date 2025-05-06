@@ -263,7 +263,7 @@ const Dashboard: React.FC = () => {
                 Cooking Time:
               </h4>
               <p className="text-lg text-gray-600">
-                {selectedRecipe.cookingTime}
+                {selectedRecipe.cookingTime} Minutes
               </p>
             </div>
           </div>

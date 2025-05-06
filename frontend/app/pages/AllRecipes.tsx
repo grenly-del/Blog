@@ -6,11 +6,9 @@ import { FaUtensils, FaScroll, FaClock } from "react-icons/fa";
 
 const RecipeListing: React.FC = () => {
   const dispatch = useAppDispatch();
-  const {
-    search_data,
-    loading,
-    success,
-  } = useAppSelector((state) => state.recipe);
+  const { search_data, loading, success } = useAppSelector(
+    (state) => state.recipe
+  );
   const [selectedRecipe, setSelectedRecipe] = useState<any>(null);
   const [showPopup, setShowPopup] = useState(false);
 
@@ -19,13 +17,13 @@ const RecipeListing: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-      // Enable/Disable scroll on body based on popup state
-      if (showPopup) {
-        document.body.classList.add("no-scroll");
-      } else {
-        document.body.classList.remove("no-scroll");
-      }
-    }, [showPopup]);
+    // Enable/Disable scroll on body based on popup state
+    if (showPopup) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [showPopup]);
 
   const handleShowPopup = (recipe: any) => {
     setSelectedRecipe(recipe);
@@ -36,7 +34,6 @@ const RecipeListing: React.FC = () => {
     setShowPopup(false);
     setSelectedRecipe(null);
   };
-
 
   return (
     <div className="recipe-popup bg-gray-100 min-h-screen">
@@ -50,9 +47,9 @@ const RecipeListing: React.FC = () => {
               <CardItems
                 key={recipe._id}
                 nama_pembuat={recipe?.userOwner?.name}
-                nama_resep={recipe.name ?? ''}
-                img={recipe.imageUrl ?? ''}
-                id_item={recipe._id ?? ''}
+                nama_resep={recipe.name ?? ""}
+                img={recipe.imageUrl ?? ""}
+                id_item={recipe._id ?? ""}
                 onDetail={() => handleShowPopup(recipe)}
               />
             ))}
@@ -124,7 +121,7 @@ const RecipeListing: React.FC = () => {
                 Cooking Time:
               </h4>
               <p className="text-lg text-gray-600">
-                {selectedRecipe.cookingTime}
+                {selectedRecipe.cookingTime} Minutes
               </p>
             </div>
           </div>
