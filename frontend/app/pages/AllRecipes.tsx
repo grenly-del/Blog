@@ -36,13 +36,13 @@ const RecipePopup: React.FC = () => {
         {loading && <h1>Loading...</h1>}
         {success && search_data?.length > 0 ? (
           <div className="flex justify-center items-center gap-6 flex-wrap">
-            {search_data.map((recipe) => (
+            {search_data?.map((recipe) => (
               <CardItems
                 key={recipe._id}
                 nama_pembuat={recipe?.userOwner?.name}
-                nama_resep={recipe.name}
-                img={recipe.imageUrl}
-                id_item={recipe._id}
+                nama_resep={recipe.name ?? ''}
+                img={recipe.imageUrl ?? ''}
+                id_item={recipe._id ?? ''}
                 onDetail={() => handleShowPopup(recipe)}
               />
             ))}
