@@ -82,14 +82,13 @@ const TopNavBar: React.FC = () => {
               <BsSearch size={20} className="text-green-500 cursor-pointer" />
             </Link>
           </div>
-          
-            <Link to="/login">
-              <button className="border border-orange-500 text-orange-500 hidden md:flex items-center py-2 px-4 rounded-full cursor-pointer hover:bg-orange-100 transition">
-                <BsFillPersonFill size={25} />
-                <span className="ml-2">Login</span>
-              </button>
-            </Link>
-         
+
+          <Link to="/login">
+            <button className="border border-orange-500 text-orange-500 hidden md:flex items-center py-2 px-4 rounded-full cursor-pointer hover:bg-orange-100 transition">
+              <BsFillPersonFill size={25} />
+              <span className="ml-2">Login</span>
+            </button>
+          </Link>
         </div>
       </div>
 
@@ -120,7 +119,7 @@ const TopNavBar: React.FC = () => {
           <ul className="flex flex-col p-4 text-gray-900">
             <NavItem to="/" icon={<FaHome size={25} />} text="Home" />
             <NavItem
-              to="/createRecipe"
+              to="/protect-page/createRecipe"
               icon={<FaUtensils size={25} />}
               text="Create Recipe"
             />
@@ -128,11 +127,6 @@ const TopNavBar: React.FC = () => {
               to="/all"
               icon={<AiOutlineReload size={25} />}
               text="Get All Recipe"
-            />
-            <NavItem
-              to="/savedRecipes"
-              icon={<AiOutlineBook size={25} />}
-              text="Saved Recipes"
             />
             <NavItem
               to="/help"

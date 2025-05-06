@@ -27,6 +27,7 @@ const UpdateRecipe: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [isImageRemoved, setIsImageRemoved] = useState(false);
 
   const authToken = Cookies.get("auth_token") || "";
 
@@ -114,10 +115,14 @@ const UpdateRecipe: React.FC = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate("/protect-page");
+  };
+
   const handleImageRemove = () => {
+    setIsImageRemoved(true);
     setFormData({ ...formData, imageUrl: "" });
-    setPreviewUrl("");
-    setImageFile(null);
+    setPreviewUrl(""); // Reset preview
   };
 
 
@@ -140,6 +145,13 @@ const UpdateRecipe: React.FC = () => {
         <h1 className="text-3xl font-bold text-orange-700 mb-4">
           Update Recipe
         </h1>
+
+        <button
+          onClick={handleBack}
+          className="mb-4 bg-orange-400 hover:bg-orange-600 rounded text-white w-20 py-2 cursor-pointer"
+        >
+          <i className="fas fa-arrow-left"></i> Back
+        </button>
 
         <form
           onSubmit={handleSubmit}
@@ -203,22 +215,31 @@ const UpdateRecipe: React.FC = () => {
             <label className="block text-gray-600 font-semibold mb-2">
               Image
             </label>
-            {formData.imageUrl && !previewUrl ? (
-              <div className="relative">
+            <div className="relative w-35 h-32 border border-gray-300 rounded-lg flex items-center justify-center overflow-hidden bg-gray-50">
+              {formData.imageUrl && !isImageRemoved && !previewUrl ? (
                 <img
                   src={formData.imageUrl}
                   alt="Preview"
-                  className="mt-2 max-w-full h-32 object-cover rounded-md"
+                  className="w-full h-full object-cover"
                 />
+              ) : previewUrl ? (
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-gray-500">Click to upload a photo</span>
+              )}
+              {previewUrl || formData.imageUrl ? (
                 <button
                   type="button"
                   onClick={handleImageRemove}
-                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full px-2 py-1 text-xs"
+                  className="absolute top-1 right-1 bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
                 >
-                  X
+                  <i className="fas fa-pen text-white"></i>
                 </button>
-              </div>
-            ) : (
+              ) : null}
               <input
                 type="file"
                 accept="image/*"
@@ -227,19 +248,12 @@ const UpdateRecipe: React.FC = () => {
                   if (file) {
                     setImageFile(file);
                     setPreviewUrl(URL.createObjectURL(file));
+                    setIsImageRemoved(false); // Reset flag if user selects new image
                   }
                 }}
-                className="w-full"
+                className="absolute inset-0 opacity-0 cursor-pointer"
               />
-            )}
-
-            {previewUrl && (
-              <img
-                src={previewUrl}
-                alt="Preview"
-                className="mt-2 max-w-full h-32 object-cover rounded-md"
-              />
-            )}
+            </div>
           </div>
 
           {/* Submit Button */}
