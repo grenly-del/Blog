@@ -48,10 +48,6 @@ const Register: React.FC = () => {
   };
 
   if (isRegistered) {
-    toast.info("Account already registered, please login.", {
-      position: "top-right",
-      autoClose: 3000,
-    });
     return <Navigate to="/login" />;
   }
 

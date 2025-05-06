@@ -48,9 +48,6 @@ exports.createRecipe = async (req, res, next) => {
     const parsedIngredients = typeof ingredients === "string" ? ingredients.split(',') : ingredients;
     console.log(parsedIngredients)
 
-    if (instructions.length > 200) {
-      throw new Error("Instructions cannot exceed 200 characters")
-    }
 
     const imageUrl = req.file?.path || req.file?.secure_url;
     const userId = req.user?.userId || userOwner;

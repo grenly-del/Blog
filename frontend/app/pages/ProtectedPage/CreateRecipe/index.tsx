@@ -5,7 +5,8 @@ import RequestAxios from "../../../config/axiosConfig";
 import { FaCamera } from "react-icons/fa";
 import { toast } from "react-toastify";
 import MultiInput from "~/components/MultiInput";
-import { useAppSelector } from "~/redux/store";
+import { useAppDispatch, useAppSelector } from "~/redux/store";
+import { resetTags } from "~/redux/features/ingredients";
 
 interface FormData {
   name: string;
@@ -17,6 +18,7 @@ interface FormData {
 
 const CreateRecipe: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
   const tags = useAppSelector(state => state.tags)
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -95,6 +97,7 @@ const CreateRecipe: React.FC = () => {
           pauseOnHover: true,
           draggable: true,
         });
+        dispatch(resetTags())
         navigate("/protect-page");
       } else {
         toast.error("Recipe creation failed", {

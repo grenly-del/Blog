@@ -11,13 +11,12 @@ const recipeSchema = mongoose.Schema({
     {
       type: String,
       required: [true, "Please enter ingredients"],
-      maxlength: [40, "Ingredients cannot be more than 40 characters"]
+      maxlength: [50, "Ingredients cannot be more than 40 characters"]
     }
   ],
   instructions: {
     type: String,
     required: [true, "Please enter instructions"],
-    maxlength: [200, "Instructions cannot be more than 200 characters"]
   },
   imageUrl: {
     type: String,
