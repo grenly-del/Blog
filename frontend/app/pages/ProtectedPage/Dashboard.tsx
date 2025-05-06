@@ -75,10 +75,6 @@ const Dashboard: React.FC = () => {
     navigate(`/updateRecipe/${id}`);
   };
 
-  useEffect(() => {
-    console.log(recipeUser);
-  }, [recipeUser]);
-
   return (
     <div>
       {/* Header */}
