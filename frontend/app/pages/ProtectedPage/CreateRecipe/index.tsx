@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import RequestAxios from "../../../config/axiosConfig";
 import { FaCamera } from "react-icons/fa";
 import { toast } from "react-toastify";
+import MultiInput from "~/components/MultiInput";
+import { useAppSelector } from "~/redux/store";
 
 interface FormData {
   name: string;
@@ -15,7 +17,7 @@ interface FormData {
 
 const CreateRecipe: React.FC = () => {
   const navigate = useNavigate();
-
+  const tags = useAppSelector(state => state.tags)
   const [formData, setFormData] = useState<FormData>({
     name: "",
     ingredients: "",
@@ -51,16 +53,15 @@ const CreateRecipe: React.FC = () => {
     }
 
     const ingredients = formData.ingredients
-      ? formData.ingredients.split(",").map((ingredient) => ingredient.trim())
-      : [];
 
     const instructions = formData.instructions
       ? formData.instructions.trim()
       : "";
 
+    console.log(`Ingredients : ${ingredients}`)
     const form = new FormData();
     form.append("name", formData.name);
-    form.append("ingredients", JSON.stringify(ingredients));
+    form.append("ingredients", ingredients);
     form.append("instructions", instructions);
     form.append("cookingTime", formData.cookingTime);
 
@@ -129,6 +130,19 @@ const CreateRecipe: React.FC = () => {
     }
   };
 
+
+
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      ingredients: tags.value.join(',')
+    }))
+  }, [tags])
+
+  useEffect(() => {
+    console.log(formData)
+  }, [formData])
+
   return (
     <div className="create-recipe-page">
       <div className="max-w-[800px] mx-auto p-4">
@@ -167,16 +181,11 @@ const CreateRecipe: React.FC = () => {
           {/* Ingredients */}
           <div className="mb-4">
             <label className="block text-gray-600 font-semibold mb-2">
-              Ingredients (comma-separated)
+              Ingredients
             </label>
-            <textarea
-              name="ingredients"
-              value={formData.ingredients}
-              onChange={handleChange}
-              rows={4}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-orange-700"
-              required
-            ></textarea>
+            <div className="w-full relative">
+              <MultiInput/>
+            </div>
           </div>
 
           {/* Instructions */}
@@ -256,5 +265,14 @@ const CreateRecipe: React.FC = () => {
     </div>
   );
 };
+
+{/* <textarea
+name="ingredients"
+value={formData.ingredients}
+onChange={handleChange}
+rows={4}
+className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-orange-700"
+required
+></textarea> */}
 
 export default CreateRecipe;

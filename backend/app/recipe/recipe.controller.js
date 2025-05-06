@@ -26,6 +26,7 @@ exports.getRecipeByUserId = async (req, res, next) => {
 exports.getRecipeById = async (req, res, next) => {
   try {
     const recipe = await recipeService.getRecipeById(req.params.id);
+    console.log(recipe)
     appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil ambil data', recipe)
   } catch (err) {
     console.log(err)
@@ -44,16 +45,8 @@ exports.createRecipe = async (req, res, next) => {
       throw new Error("All fields are required")
     }
 
-    const parsedIngredients = typeof ingredients === "string" ? JSON.parse(ingredients) : ingredients;
+    const parsedIngredients = typeof ingredients === "string" ? ingredients.split(',') : ingredients;
     console.log(parsedIngredients)
-
-    if (!Array.isArray(parsedIngredients)) {
-      throw new Error("Ingredients must be an array")
-    }
-
-    if (parsedIngredients.some((item) => item.length > 40)) {
-      throw new Error("Ingredients cannot exceed 40 characters each")
-    }
 
     if (instructions.length > 200) {
       throw new Error("Instructions cannot exceed 200 characters")
@@ -87,12 +80,15 @@ exports.createRecipe = async (req, res, next) => {
 
 
 exports.updateRecipe = async (req, res, next) => {
+  const { ingredients } = req.body;
+  const parsedIngredients = typeof ingredients === "string" ? ingredients.split(',') : ingredients;
   const newRecipeData = {
     ...req.body,
+    ingredients: parsedIngredients,
     imageUrl: req.file?.path || req.file?.secure_url,
   }
   try {
-    console.log(req.body)
+    console.log(newRecipeData)
     const updated = await recipeService.updateRecipe(req.params.id, newRecipeData);
     appRes(res, HTTP_STATUS_CODE.OK, 'Berhasil mengubah', updated)
   } catch (err) {

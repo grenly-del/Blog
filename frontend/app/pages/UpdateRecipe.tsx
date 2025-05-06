@@ -4,16 +4,21 @@ import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import axioConfig from "~/config/axiosConfig"; // Adjust the import path as necessary
+import { useAppDispatch, useAppSelector } from "~/redux/store";
+import MultiInput from "~/components/MultiInput";
+import { addTag } from "~/redux/features/ingredients";
 
 const UpdateRecipe: React.FC = () => {
   const navigate = useNavigate();
+  const tags = useAppSelector(state => state.tags)
   const location = useLocation();
   const { id } = useParams();
+  const dispatch = useAppDispatch()
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<any>({
     _id: "",
     name: "",
-    ingredients: "",
+    ingredients: [],
     instructions: "",
     cookingTime: 0,
     imageUrl: "",
@@ -34,35 +39,19 @@ const UpdateRecipe: React.FC = () => {
       setFormData({
         _id: recipe._id,
         name: recipe.name,
-        ingredients: recipe.ingredients.join(", "),
+        ingredients: recipe.ingredients,
         instructions: recipe.instructions,
         cookingTime: recipe.cookingTime,
         imageUrl: recipe.imageUrl,
       });
+
+      dispatch(addTag(recipe.ingredients))
     } catch (err) {
       toast.error("Recipe not found or error fetching data");
       navigate("/protect-page");
     }
   };
 
-  useEffect(() => {
-    const stateRecipe = location.state?.recipe;
-    if (stateRecipe) {
-      setFormData({
-        _id: stateRecipe._id,
-        name: stateRecipe.name,
-        ingredients: stateRecipe.ingredients.join(", "),
-        instructions: stateRecipe.instructions,
-        cookingTime: stateRecipe.cookingTime,
-        imageUrl: stateRecipe.imageUrl,
-      });
-    } else if (id) {
-      fetchRecipe(id);
-    } else {
-      toast.error("Invalid recipe ID");
-      navigate("/protect-page");
-    }
-  }, [location.state, id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -84,14 +73,12 @@ const UpdateRecipe: React.FC = () => {
     }
 
     const ingredients = formData.ingredients
-      ? formData.ingredients.split(",").map((i) => i.trim())
-      : [];
 
     const instructions = formData.instructions.trim();
-
+    console.log(`Ingredients : ${ingredients}`)
     const form = new FormData();
     form.append("name", formData.name);
-    form.append("ingredients", JSON.stringify(ingredients));
+    form.append("ingredients", ingredients);
     form.append("instructions", instructions);
     form.append("cookingTime", String(formData.cookingTime));
 
@@ -133,6 +120,20 @@ const UpdateRecipe: React.FC = () => {
     setImageFile(null);
   };
 
+
+
+    useEffect(() => {
+      fetchRecipe(id);
+    }, [id])
+
+    useEffect(() => {
+      setFormData((prev) => ({
+        ...prev,
+        ingredients: tags.value
+      }))
+    }, [tags.value])
+
+
   return (
     <div className="update-recipe-page">
       <div className="max-w-[800px] mx-auto p-4">
@@ -162,16 +163,9 @@ const UpdateRecipe: React.FC = () => {
           {/* Ingredients */}
           <div className="mb-4">
             <label className="block text-gray-600 font-semibold mb-2">
-              Ingredients (comma-separated)
+              Ingredients
             </label>
-            <textarea
-              name="ingredients"
-              value={formData.ingredients}
-              onChange={handleChange}
-              rows={4}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-orange-700"
-              required
-            ></textarea>
+            <MultiInput/>
           </div>
 
           {/* Instructions */}

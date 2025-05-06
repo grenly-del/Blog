@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch, useSelector } from 'react-redux'
 import AuthSlice from './features/auth'
 import RecipeSlice from './features/recipes'
+import tagsSlice  from './features/ingredients'
 
 const store = configureStore({
   reducer: {
     auth: AuthSlice,
-    recipe: RecipeSlice
+    recipe: RecipeSlice,
+    tags: tagsSlice
   }
 })
 
