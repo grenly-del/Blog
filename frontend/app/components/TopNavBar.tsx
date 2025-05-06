@@ -8,6 +8,8 @@ import { AiOutlineBook, AiOutlineReload } from "react-icons/ai";
 import { useAuth } from "../context/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAppDispatch } from "~/redux/store";
+import { searchProduct } from "~/redux/features/recipes";
 
 interface NavItemProps {
   to: string;
@@ -26,6 +28,7 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon, text }) => (
 
 const TopNavBar: React.FC = () => {
   const [show, setShow] = useState<boolean>(false);
+  const dispatch = useAppDispatch()
   const navigate = useNavigate();
   // const { user, logout } = useAuth();
 
@@ -44,6 +47,10 @@ const TopNavBar: React.FC = () => {
       });
     }
   };
+
+  const handleSearch = (e) => {
+    dispatch(searchProduct(e.target.value))
+  }
 
   return (
     <>
@@ -76,7 +83,8 @@ const TopNavBar: React.FC = () => {
             <input
               className="bg-transparent p-2 w-full h-10 focus:outline-none text-sm"
               type="text"
-              placeholder="Find Recipe by ID"
+              placeholder="Find Recipe by Name . . ."
+              onChange={handleSearch}
             />
             <Link to="/recipe/123">
               <BsSearch size={20} className="text-green-500 cursor-pointer" />

@@ -97,7 +97,6 @@ const CreateRecipe: React.FC = () => {
           pauseOnHover: true,
           draggable: true,
         });
-        dispatch(resetTags())
         navigate("/protect-page");
       } else {
         toast.error("Recipe creation failed", {
@@ -143,8 +142,8 @@ const CreateRecipe: React.FC = () => {
   }, [tags])
 
   useEffect(() => {
-    console.log(formData)
-  }, [formData])
+    dispatch(resetTags())
+  }, [])
 
   return (
     <div className="create-recipe-page">

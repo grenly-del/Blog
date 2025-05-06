@@ -24,6 +24,7 @@ interface ResponseRecipe {
   error: boolean;
   loading: boolean;
   filter_data?: Recipe[]
+  search_data?: Recipe[]
 }
 
 const initialValue: ResponseRecipe = {
@@ -32,7 +33,8 @@ const initialValue: ResponseRecipe = {
   success: false,
   error: false,
   loading: false,
-  filter_data: []
+  filter_data: [],
+  search_data: []
 };
 
 interface RecipeResponseAxios extends AxiosResponse {
@@ -85,7 +87,19 @@ const RecipeSlice = createSlice({
   reducers: {
     clearRecipe: (state) => {
       state.filter_data = []
-    }
+    },
+    searchProduct: (state, action) => {
+      // Salin data produk
+          const products = JSON.parse(JSON.stringify(state.data));
+
+          // Buat regex berdasarkan input pencarian, dengan flag case-insensitive
+          const searchRegex = new RegExp(action.payload, "i");
+
+          // Filter produk berdasarkan pencocokan dengan regex
+          state.search_data = products?.filter((product:Recipe) =>
+              searchRegex.test(product.name?? '') // Cek apakah nama produk cocok dengan regex
+          );
+  },
   },
   extraReducers: (builder) => {
     builder.addCase(GetAllRecipe.pending, (state) => {
@@ -101,6 +115,7 @@ const RecipeSlice = createSlice({
         state.success = true;
         state.error = false;
         state.data = action.payload.payload;
+        state.search_data = action.payload.payload
         state.message = action.payload.message;
       }
     )
@@ -142,5 +157,5 @@ const RecipeSlice = createSlice({
 });
 
 
-export const {clearRecipe} = RecipeSlice.actions
+export const {clearRecipe, searchProduct} = RecipeSlice.actions
 export default RecipeSlice.reducer;
