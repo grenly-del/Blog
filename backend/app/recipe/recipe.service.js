@@ -11,7 +11,6 @@ const createRecipe = async (recipeData, userId, imagePath) => {
   if (!userId) {
     throw new Error("User not authenticated");
   }
-  console.log(imagePath); // Debugging line
   let imageUrl = "";
   if (imagePath) {
     imageUrl = await uploadImageToCloudinary(imagePath);

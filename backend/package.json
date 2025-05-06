@@ -13,6 +13,8 @@
     "prod": "cross-env NODE_ENV=production nodemon ./bin/www"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "bcrypt": "^5.1.1",
     "cloudinary": "^1.41.3",
     "cookie-parser": "~1.4.4",
