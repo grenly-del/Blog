@@ -6,7 +6,7 @@ import CardItems from "~/components/CardItems";
 const RecipePopup: React.FC = () => {
   const dispatch = useAppDispatch();
   const {
-    data: recipes,
+    search_data,
     loading,
     success,
   } = useAppSelector((state) => state.recipe);
@@ -27,15 +27,16 @@ const RecipePopup: React.FC = () => {
     setSelectedRecipe(null);
   };
 
+
   return (
     <div className="recipe-popup bg-gray-100 min-h-screen">
       <div className="w-full px-20 mx-auto p-4">
         <h1 className="text-3xl font-bold text-orange-700 mb-4">All Recipes</h1>
 
         {loading && <h1>Loading...</h1>}
-        {success && recipes?.length > 0 ? (
+        {success && search_data?.length > 0 ? (
           <div className="flex justify-center items-center gap-6 flex-wrap">
-            {recipes.map((recipe) => (
+            {search_data.map((recipe) => (
               <CardItems
                 key={recipe._id}
                 nama_pembuat={recipe?.userOwner?.name}
