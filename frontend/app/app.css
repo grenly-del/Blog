@@ -1,6 +1,15 @@
 @import "tailwindcss";
 
 
+/* Tambahkan gaya CSS berikut ke dalam file CSS Anda */
+body.no-scroll {
+  overflow: hidden; /* Menonaktifkan scroll pada background */
+}
+
+.popup-content {
+  max-height: 90vh; /* Pastikan popup tidak terlalu tinggi */
+  overflow-y: auto; /* Membuat konten popup dapat digulir */
+}
 
 
 @theme {

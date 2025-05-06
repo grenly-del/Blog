@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "~/redux/store";
 import { GetAllRecipe } from "~/redux/features/recipes";
 import CardItems from "~/components/CardItems";
+import { FaUtensils, FaScroll, FaClock } from "react-icons/fa";
 
-const RecipePopup: React.FC = () => {
+const RecipeListing: React.FC = () => {
   const dispatch = useAppDispatch();
   const {
     data: recipes,
@@ -16,6 +17,15 @@ const RecipePopup: React.FC = () => {
   useEffect(() => {
     dispatch(GetAllRecipe());
   }, [dispatch]);
+
+  useEffect(() => {
+      // Enable/Disable scroll on body based on popup state
+      if (showPopup) {
+        document.body.classList.add("no-scroll");
+      } else {
+        document.body.classList.remove("no-scroll");
+      }
+    }, [showPopup]);
 
   const handleShowPopup = (recipe: any) => {
     setSelectedRecipe(recipe);
@@ -54,13 +64,16 @@ const RecipePopup: React.FC = () => {
       {/* Pop-up Detail Recipe */}
       {showPopup && selectedRecipe && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
-          <div className="bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full text-left space-y-6 transform transition-all duration-500 ease-in-out opacity-100 scale-100">
+          <div className="bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full text-left space-y-6 transform transition-all duration-500 ease-in-out opacity-100 scale-100 overflow-y-auto max-h-[90vh]">
+            {/* Tombol Close */}
             <button
               onClick={handleCloseDetail}
               className="absolute cursor-pointer top-4 right-4 text-xl font-bold text-gray-600 hover:text-gray-900 transition duration-300 ease-in-out"
             >
               X
             </button>
+
+            {/* Konten Pop-up */}
             <h3 className="text-3xl font-semibold text-center text-orange-600 mb-4">
               {selectedRecipe.name}
             </h3>
@@ -79,9 +92,10 @@ const RecipePopup: React.FC = () => {
               </span>
             </p>
 
-            {/* New Recipe Details */}
+            {/* Ingredients */}
             <div className="mt-6">
-              <h4 className="font-semibold text-xl text-gray-800 mb-2">
+              <h4 className="font-semibold text-xl text-gray-800 mb-2 flex items-center">
+                <FaUtensils className="text-orange-600 mr-2" />
                 Ingredients:
               </h4>
               <p className="text-lg text-gray-600">
@@ -91,8 +105,10 @@ const RecipePopup: React.FC = () => {
               </p>
             </div>
 
+            {/* Instructions */}
             <div className="mt-6">
-              <h4 className="font-semibold text-xl text-gray-800 mb-2">
+              <h4 className="font-semibold text-xl text-gray-800 mb-2 flex items-center">
+                <FaScroll className="text-blue-600 mr-2" />
                 Instructions:
               </h4>
               <p className="text-lg text-gray-600">
@@ -100,8 +116,10 @@ const RecipePopup: React.FC = () => {
               </p>
             </div>
 
+            {/* Cooking Time */}
             <div className="mt-6">
-              <h4 className="font-semibold text-xl text-gray-800 mb-2">
+              <h4 className="font-semibold text-xl text-gray-800 mb-2 flex items-center">
+                <FaClock className="text-green-600 mr-2" />
                 Cooking Time:
               </h4>
               <p className="text-lg text-gray-600">
@@ -115,4 +133,4 @@ const RecipePopup: React.FC = () => {
   );
 };
 
-export default RecipePopup;
+export default RecipeListing;
