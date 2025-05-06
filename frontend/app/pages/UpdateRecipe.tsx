@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import axioConfig from "~/config/axiosConfig"; // Adjust the import path as necessary
 import { useAppDispatch, useAppSelector } from "~/redux/store";
 import MultiInput from "~/components/MultiInput";
-import { addTag } from "~/redux/features/ingredients";
+import { addTag, resetTags } from "~/redux/features/ingredients";
 
 const UpdateRecipe: React.FC = () => {
   const navigate = useNavigate();
@@ -82,7 +82,7 @@ const UpdateRecipe: React.FC = () => {
     form.append("ingredients", ingredients);
     form.append("instructions", instructions);
     form.append("cookingTime", String(formData.cookingTime));
-
+ 
     if (imageFile) {
       form.append("image", imageFile);
     }
