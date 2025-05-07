@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "~/redux/store";
 import { GetAllRecipe, GetAllRecipeByUser } from "~/redux/features/recipes";
 import CardItems from "~/components/CardItems";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -87,23 +87,57 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
-      {/* Header */}
-      <header className="flex justify-between items-center px-5 py-4 bg-white relative shadow-md">
-        <div className="text-3xl font-bold">DiagnoAI</div>
+      <header className="sticky top-0 z-50 flex justify-between items-center px-5 py-4 bg-white shadow-md">
+        {/* Logo, Title, and Tagline */}
+        <div className="flex items-center gap-x-4">
+          <Link to="/" className="flex items-center">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold">
+              MERN
+              <span className="font-bold bg-yellow-100 rounded-full px-2 ml-1">
+                Delights :)
+              </span>
+            </h1>
+          </Link>
+
+          {/* Tagline */}
+          <div className="hidden lg:flex items-center bg-gray-300 rounded-full px-3 py-1 text-sm">
+            <span className="p-2 font-bold">Awaken Your Inner</span>
+            <span className="bg-orange-700 text-white rounded-full px-3 py-1 font-bold ml-2">
+              Chef
+            </span>
+          </div>
+        </div>
+
+        {/* User Info and Popup */}
         <div className="flex items-center gap-x-3 text-gray-800 font-semibold">
+          {/* Display Username */}
           <p>{user?.username || "Grantly"}</p>
+
+          {/* Profile Icon */}
           <button onClick={() => setPopupActive(!popupActive)}>
-            <img src="./icons/userIcon.svg" alt="User Icon" width={40} />
+            <img
+              src="./icons/userIcon.svg"
+              alt="User Icon"
+              className="w-10 h-10 rounded-full"
+            />
           </button>
         </div>
+
+        {/* Logout Popup */}
         {popupActive && (
-          <button
-            onClick={handleLogout}
-            className="absolute right-5 top-16 px-5 py-2 bg-white border hover:bg-gray-50 rounded-md"
-          >
-            <p className="text-[#D73434]">Keluar</p>
-            <img src="./icons/iconOut.svg" alt="Logout Icon" />
-          </button>
+          <div className="absolute right-5 top-16 bg-white border rounded-md shadow-lg p-4">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-x-2 text-[#D73434] hover:bg-gray-50 rounded-md px-3 py-2 transition"
+            >
+              <img
+                src="./icons/iconOut.svg"
+                alt="Logout Icon"
+                className="w-5 h-5"
+              />
+              <span>Keluar</span>
+            </button>
+          </div>
         )}
       </header>
 
@@ -118,13 +152,13 @@ const Dashboard: React.FC = () => {
             <div className="flex justify-between gap-3 mt-4">
               <button
                 onClick={() => setConfirmDeleteId(null)}
-                className="w-full px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
+                className="w-full px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer"
               >
                 Batal
               </button>
               <button
                 onClick={handleDeleteConfirmed}
-                className="w-full px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600"
+                className="w-full px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 cursor-pointer"
               >
                 Hapus
               </button>
