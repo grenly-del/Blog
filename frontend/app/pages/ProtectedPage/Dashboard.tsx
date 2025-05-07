@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "~/redux/store";
-import { GetAllRecipe, GetAllRecipeByUser } from "~/redux/features/recipes";
+import { GetAllRecipe, GetAllRecipeByUser, searchProductUser } from "~/redux/features/recipes";
 import CardItems from "~/components/CardItems";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -17,6 +17,8 @@ import "swiper/css/pagination";
 import "swiper/css/grid";
 import "./swiper.css";
 import { logoutThunk } from "~/redux/features/logoutThunk";
+import { AiOutlineSearch } from "react-icons/ai";
+import { BsSearch } from "react-icons/bs";
 
 const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -50,9 +52,7 @@ const Dashboard: React.FC = () => {
   }, [showDetailPopup]);
 
   const handleLogout = async () => {
-    await dispatch(logoutThunk());
-    window.location.href = "/";
-    toast.success("Logout Berhasil!");
+    window.location.href = "/logout";
   };
 
   const handleShowDetail = (recipe: any) => {
@@ -85,11 +85,42 @@ const Dashboard: React.FC = () => {
     navigate(`/updateRecipe/${id}`);
   };
 
+  const handleSearch = (e) => {
+      dispatch(searchProductUser(e.target.value))
+    }
+    
+  useEffect(() => {
+    dispatch(GetAllRecipeByUser())
+  }, [])
+
+  useEffect(() => {
+    console.log(recipeUser.filter_data)
+  }, [recipeUser.filter_data])
+
   return (
     <div>
       {/* Header */}
       <header className="flex justify-between items-center px-5 py-4 bg-white relative shadow-md">
-        <div className="text-3xl font-bold">DiagnoAI</div>
+        <Link to="/" className="px-2">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl">
+            MERN
+            <span className="font-bold bg-yellow-100 filter rounded-full">
+              Delights :)
+            </span>
+          </h1>
+        </Link>
+        <div className="bg-gray-300 rounded-full flex items-center px-2 w-[200px] sm:w-[400px] lg:w-[500px]">
+          <AiOutlineSearch size={25} className="mr-2" />
+          <input
+            className="bg-transparent p-2 w-full h-10 focus:outline-none text-sm"
+            type="text"
+            placeholder="Find Recipe by Name . . ."
+            onChange={handleSearch}
+          />
+          <Link to="/recipe/123">
+            <BsSearch size={20} className="text-green-500 cursor-pointer" />
+          </Link>
+        </div>
         <div className="flex items-center gap-x-3 text-gray-800 font-semibold">
           <p>{user?.username || "Grantly"}</p>
           <button onClick={() => setPopupActive(!popupActive)}>

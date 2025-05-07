@@ -91,7 +91,7 @@ const RecipeSlice = createSlice({
     searchProduct: (state, action) => {
       // Salin data produk
           const products = JSON.parse(JSON.stringify(state.data));
-
+          console.log(products)
           // Buat regex berdasarkan input pencarian, dengan flag case-insensitive
           const searchRegex = new RegExp(action.payload, "i");
 
@@ -99,7 +99,19 @@ const RecipeSlice = createSlice({
           state.search_data = products?.filter((product:Recipe) =>
               searchRegex.test(product.name?? '') // Cek apakah nama produk cocok dengan regex
           );
-  },
+    },
+    searchProductUser: (state, action) => {
+      // Salin data produk
+      const products = JSON.parse(JSON.stringify(state.data));
+
+          // Buat regex berdasarkan input pencarian, dengan flag case-insensitive
+          const searchRegex = new RegExp(action.payload, "i");
+
+          // Filter produk berdasarkan pencocokan dengan regex
+          state.filter_data = products?.filter((product:Recipe) =>
+              searchRegex.test(product.name?? '') // Cek apakah nama produk cocok dengan regex
+          );
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(GetAllRecipe.pending, (state) => {
@@ -140,6 +152,7 @@ const RecipeSlice = createSlice({
         state.loading = false;
         state.success = true;
         state.error = false;
+        state.data = action.payload.payload;
         state.filter_data = action.payload.payload;
         state.message = action.payload.message;
       }
@@ -157,5 +170,5 @@ const RecipeSlice = createSlice({
 });
 
 
-export const {clearRecipe, searchProduct} = RecipeSlice.actions
+export const {clearRecipe, searchProduct, searchProductUser} = RecipeSlice.actions
 export default RecipeSlice.reducer;
