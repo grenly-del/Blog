@@ -11,7 +11,12 @@ router.get("/recipestest", (req, res) => {
 });
 
 // CREATE - Tambah resep baru (dengan upload gambar)
-router.post("/",verifyToken, upload.single("image"), recipeController.createRecipe);
+router.post(
+  "/",
+  verifyToken,
+  upload.single("image"),
+  recipeController.createRecipe
+);
 
 // READ - Ambil semua resep
 router.get("/", recipeController.getAllRecipes);
@@ -20,12 +25,16 @@ router.get("/", recipeController.getAllRecipes);
 router.get("/with-id", verifyToken, recipeController.getRecipeByUserId);
 
 // UPDATE - Update resep (termasuk upload gambar baru)
-router.put("/:id", upload.single("image"), recipeController.updateRecipe);
+router.put(
+  "/:id",
+  verifyToken,
+  upload.single("image"),
+  recipeController.updateRecipe
+);
 
 router.get("/:id", recipeController.getRecipeById);
 
 // DELETE - Hapus resep berdasarkan ID
-router.delete("/:id", recipeController.deleteRecipe);
-
+router.delete("/:id", verifyToken, recipeController.deleteRecipe);
 
 module.exports = router;

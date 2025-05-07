@@ -28,8 +28,9 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon, text }) => (
 
 const TopNavBar: React.FC = () => {
   const [show, setShow] = useState<boolean>(false);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   // const { user, logout } = useAuth();
 
   const handleLogout = async () => {
@@ -49,8 +50,8 @@ const TopNavBar: React.FC = () => {
   };
 
   const handleSearch = (e) => {
-    dispatch(searchProduct(e.target.value))
-  }
+    dispatch(searchProduct(e.target.value));
+  };
 
   return (
     <>

@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "~/redux/store";
-import { GetAllRecipe, GetAllRecipeByUser, searchProductUser } from "~/redux/features/recipes";
+import {
+  GetAllRecipe,
+  GetAllRecipeByUser,
+  searchProductUser,
+} from "~/redux/features/recipes";
 import CardItems from "~/components/CardItems";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -19,6 +23,7 @@ import "./swiper.css";
 import { logoutThunk } from "~/redux/features/logoutThunk";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsSearch } from "react-icons/bs";
+import axiosConfig from "~/config/axiosConfig";
 
 const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -68,9 +73,7 @@ const Dashboard: React.FC = () => {
   const handleDeleteConfirmed = async () => {
     if (confirmDeleteId) {
       try {
-        await axios.delete(
-          `http://localhost:3005/api/v1/recipe/${confirmDeleteId}`
-        );
+        await axiosConfig.delete(`/recipe/${confirmDeleteId}`);
         setConfirmDeleteId(null);
         toast.success("Resep berhasil dihapus!");
         dispatch(GetAllRecipeByUser());
@@ -86,16 +89,16 @@ const Dashboard: React.FC = () => {
   };
 
   const handleSearch = (e) => {
-      dispatch(searchProductUser(e.target.value))
-    }
-    
-  useEffect(() => {
-    dispatch(GetAllRecipeByUser())
-  }, [])
+    dispatch(searchProductUser(e.target.value));
+  };
 
   useEffect(() => {
-    console.log(recipeUser.filter_data)
-  }, [recipeUser.filter_data])
+    dispatch(GetAllRecipeByUser());
+  }, []);
+
+  useEffect(() => {
+    console.log(recipeUser.filter_data);
+  }, [recipeUser.filter_data]);
 
   return (
     <div>
